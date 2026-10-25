@@ -1,0 +1,126 @@
+cases:
+  - { id: s2-001, message: "Morgen! Übungen gemacht, alles gut. Ach ja, bin gestern Abend im Bad ausgerutscht und hab mich aufs Hinterteil gesetzt, tut nur bisschen weh", expected: [fall] }
+  - { id: s2-002, message: "hab heut früh beim zähneputzn gmerkt dass mei linker mundwinkel so runterhängt und des wasser is rausglaufa, mei frau sagt i red so komisch", expected: [neurological] }
+  - { id: s2-003, message: "Brustschmerzen hab ich keine, Fieber auch nicht, gestürzt bin ich auch nicht. Nur die Wade zwickt nach dem Radeln.", expected: [] }
+  - { id: s2-004, message: "Hallo hier schreibt die Tochter von Frau K. Mama hat heute morgen im Flur auf dem Boden gelegen, sie weiß nicht wie lange, sie sagt sie war nur müde", expected: [fall] }
+  - { id: s2-005, message: "Ich hab so einen Druck auf der Brust seit dem Training, als ob einer drauf sitzt, geht nicht richtig weg", expected: [chest_pain] }
+  - { id: s2-006, message: "Nach den 3 Stockwerken war ich aus der Puste, nach ner Minute wieder normal, so wie die Physio gesagt hat. Gutes Gefühl heute!", expected: [] }
+  - { id: s2-007, message: "Ich krieg beim Anziehen kaum noch Luft, muss mich nach jedem Socken hinsetzen und verschnaufen, war letzte Woche noch nicht so", expected: [breathlessness] }
+  - { id: s2-008, message: "Mei Nachbarin is gestern aufm Eis hingfalln, Oberschenkelhals, jetzt hob i scho Angst vorm Rausgeh", expected: [] }
+  - { id: s2-009, message: "Fast hätts mich hingelegt an der Bordsteinkante, aber ich hab mich am Rollator festgehalten. Nix passiert.", expected: [] }
+  - { id: s2-010, message: "Temperatur heute 37,2 gemessen, Narbe ist trocken und blass. Laufe schon ohne Stöcke in der Wohnung", expected: [] }
+  - { id: s2-011, message: "Die Narbe am Knie ist seit gestern dick und knallrot und wenn ich drück kommt so gelbes zeug raus", expected: [wound_or_fever] }
+  - { id: s2-012, message: "Thermometer zeigt 38,7 und ich hab Schüttelfrost. Training lass ich heute lieber aus", expected: [wound_or_fever] }
+  - { id: s2-013, message: "Knie heute schlimm, kann kaum auftreten", pain_score: 8, previous_pain_score: 5, expected: [severe_pain] }
+  - { id: s2-014, message: "Seit dem Treppensteigen sticht die Hüfte stärker", pain_score: 7, previous_pain_score: 4, expected: [pain_jump] }
+  - { id: s2-015, message: "Bisschen mehr Schmerz als letztes Mal, aber okay", pain_score: 6, previous_pain_score: 4, expected: [] }
+  - { id: s2-016, message: "Manchmal denk ich, es wär für alle besser, wenn ich einfach nicht mehr aufwache. Die Übungen mach ich trotzdem.", expected: [self_harm] }
+  - { id: s2-017, message: "Die Kniebeugen bringen mich noch um 😂 aber ich halt durch", expected: [] }
+  - { id: s2-018, message: "Did my exercises. Felt a bit wobbly. No falls, no chest pain, nothing like that, just tired.", expected: [] }
+  - { id: s2-019, message: "my right hand went all numb and clumsy while I was buttering toast and I dropped the knife, its better now but still feels funny", expected: [neurological] }
+  - { id: s2-020, message: "I took a tumble in the garden yesterday, landed on my good side luckily. Nothing broken I think.", expected: [fall] }
+  - { id: s2-021, message: "Out of breath after the walk to the shops, same as always, back to normal after sitting a bit. Knee's improving.", expected: [] }
+  - { id: s2-022, message: "I can't seem to get enough air even sitting in my chair watching telly. Had to sleep propped up on three pillows.", expected: [breathlessness] }
+  - { id: s2-023, message: "Ick bin jestern inne Küche hinjeknallt, Fliesen warn nass. Knie is blau aber jeht schon", expected: [fall] }
+  - { id: s2-024, message: "Nu, mir is heude so engs in dor Brust, wie wenn ä Band drumrum wär, un dor linke Arm ziehd ooch", expected: [chest_pain] }
+  - { id: s2-025, message: "Moin, hüüt is allens good. Bün nich hinfullen, Puste is ok, Narv sücht good ut.", expected: [] }
+  - { id: s2-026, message: "Hallo Herr Becker Komma ich wollte nur sagen dass meine Narbe heute so warm ist und rot Punkt und es nässt durch das Pflaster Punkt Gruß", expected: [wound_or_fever] }
+  - { id: s2-027, message: "Hallo Frau Weber Komma die Übungen gingen gut Punkt kein Fieber Punkt Narbe sieht gut aus Punkt bis Donnerstag", expected: [] }
+  - { id: s2-028, message: "Mein Mann traut sich nicht zu schreiben. Er hat seit gestern Abend 39 Fieber und das operierte Knie ist heiß und geschwollen.", expected: [wound_or_fever] }
+  - { id: s2-029, message: "Ich schreib für meinen Vater. Er sagt seit ein paar Tagen, er mag nimmer, er wär lieber tot als so weiterzuleben. Er isst kaum noch.", expected: [self_harm] }
+  - { id: s2-030, message: "Ich hab in der Zeitung gelesen, dass Druck auf der Brust ein Herzinfarktzeichen ist. Hab ich zum Glück nicht, wollte nur wissen ob ich beim Ergometer drauf achten muss.", expected: [] }
+  - { id: s2-031, message: "Herzschmerz pur, der FC hat schon wieder verloren 😩 Training war aber top", expected: [] }
+  - { id: s2-032, message: "Mir fehlen die Worte, ich bin heut 2 km am Stück gelaufen!!", expected: [] }
+  - { id: s2-033, message: "i war wie gelähmt vor schreck als der hund vom nachbarn losbellt hat, aber sonst passt alles", expected: [] }
+  - { id: s2-034, message: "Hatte vor 3 Jahren einen Schlaganfall, die rechte Hand ist seitdem etwas schwächer, aber unverändert. Heute gut trainiert.", expected: [] }
+  - { id: s2-035, message: "seit heut mittag is mei rechts bein so schwer und wia ned meins, i ko an fuaß ned richtig hebn", expected: [neurological] }
+  - { id: s2-036, message: "Kein Fieber, aber aus der Narbe kommt seit heute so trübe Flüssigkeit", expected: [wound_or_fever] }
+  - { id: s2-037, message: "no fever no pain no nothing just wanted to say thank you for the lovely session", expected: [] }
+  - { id: s2-038, message: "keine brustschmerzen nur so ein drücken und eng werden wenn ich die treppe hochgeh, geht nach paar min weg", expected: [chest_pain] }
+  - { id: s2-039, message: "Ich hab gar nix, außer dass ich die Wörter nicht mehr finde und meine Frau sagt ich nuschel seit heute Mittag", expected: [neurological] }
+  - { id: s2-040, message: "Termin am Mi passt. Rezept für Lymphdrainage brauch ich noch. Und bin übrigens Samstag vom Stuhl gerutscht beim Gardinen aufhängen, Schulter tut weh", expected: [fall] }
+  - { id: s2-041, message: "unverändert, Tabletten helfen kaum", pain_score: 9, previous_pain_score: 9, expected: [severe_pain] }
+  - { id: s2-042, message: "Viel besser heute!", pain_score: 3, previous_pain_score: 7, expected: [] }
+  - { id: s2-043, message: "nach dem Spaziergang mehr Schmerzen als sonst", pain_score: 5, previous_pain_score: 2, expected: [pain_jump] }
+  - { id: s2-044, message: "Weiß nicht was los ist, plötzlich ganz schlimm", pain_score: 8, previous_pain_score: 2, expected: [severe_pain] }
+  - { id: s2-045, message: "The physio pushed me hard today, I was huffing and puffing on the bike but thats the point isnt it, recovered in a couple of minutes", expected: [] }
+  - { id: s2-046, message: "Read on a forum that people get blood clots after hip ops and then can't breathe. Scared me silly but I'm breathing fine.", expected: [] }
+  - { id: s2-047, message: "My wife fell last night going to the loo, so I spent the morning at A&E with her instead of doing my exercises. She's ok.", expected: [] }
+  - { id: s2-048, message: "I'm dying to get back on the golf course!", expected: [] }
+  - { id: s2-049, message: "Honestly some days I wonder what the point is. I've been thinking I'd be better off dead than stuck like this.", expected: [self_harm] }
+  - { id: s2-050, message: "this is my sons phone. dad has been talking about ending it all, says hes saved up his pills. please call us", expected: [self_harm] }
+  - { id: s2-051, message: "Wound looks angry, red all around and weeping a bit, smells off too", expected: [wound_or_fever] }
+  - { id: s2-052, message: "Temp 36.9 this morning, 37.4 after the hot shower. Scar is pink but flat and dry.", expected: [] }
+  - { id: s2-053, message: "Mein Enkel hat seit Montag Fieber, deshalb konnte ich nicht zur Therapie, er war bei mir. Mir gehts gut.", expected: [] }
+  - { id: s2-054, message: "Lampenfieber vor meinem Vortrag im Seniorentreff, haha. Sonst alles bestens", expected: [] }
+  - { id: s2-055, message: "Der rote Streifen am Knie ist vom Kinesiotape, das ist pink. Wollte nur Bescheid geben bevor Sie beim Foto erschrecken", expected: [] }
+  - { id: s2-056, message: "Hab mich heute gefühlt als würde ich gleich umfallen, bin aber nicht gefallen, hab mich rechtzeitig hingesetzt. Kreislauf halt.", expected: [] }
+  - { id: s2-057, message: "Bin gestern ohnmächtig geworden und kam auf dem Teppich wieder zu mir", expected: [fall] }
+  - { id: s2-058, message: "Mei Fuaß is eigschlafa weil i im Schneidersitz gsessn bin, nach a paar Minutn wars wieda guad", expected: [] }
+  - { id: s2-059, message: "Seit dem Aufstehen ist die linke Gesichtshälfte taub und beim Lächeln geht nur eine Seite hoch", expected: [neurological] }
+  - { id: s2-060, message: "Ich hab mich gestern ganz schön hingelegd, uffm Glatteis vorm Konsum, de Hüfte is aber heile", expected: [fall] }
+  - { id: s2-061, message: "Nee, hingefallen bin ich nicht. Der Hund ist mir nur in die Leine gerannt und ich bin stehen geblieben", expected: [] }
+  - { id: s2-062, message: "Mir ist ein Stein vom Herzen gefallen, das Röntgen war gut!", expected: [] }
+  - { id: s2-063, message: "Ich fall aus allen Wolken, die Kasse zahlt die Nachsorge doch", expected: [] }
+  - { id: s2-064, message: "Ich will niemandem zur Last fallen, deshalb frag ich lieber: darf ich wieder Auto fahren?", expected: [] }
+  - { id: s2-065, message: "Ich bin nur noch eine Last. Wenn ich die Tabletten alle auf einmal nehm, ist Ruhe. Hab ich mir schon überlegt.", expected: [self_harm] }
+  - { id: s2-066, message: "Wenn ich die Übung noch einmal machen muss, werf ich das Theraband aus dem Fenster 😅", expected: [] }
+  - { id: s2-067, message: "fell over agin this morning tryng to get out of bed, hit my head on the bedside tabel, bit of a bump", expected: [fall] }
+  - { id: s2-068, message: "nearly went flying on the wet floor at the supermarket but a nice lady caught my arm", expected: [] }
+  - { id: s2-069, message: "I'm scared stiff of falling in the shower now, can we practise getting in and out?", expected: [] }
+  - { id: s2-070, message: "Chest feels tight and heavy, like a belt being pulled, came on when I was hoovering and hasnt gone", expected: [chest_pain] }
+  - { id: s2-071, message: "No chest pain. No breathlessness. But I did go down on the patio on Sunday, only my pride hurt.", expected: [fall] }
+  - { id: s2-072, message: "The scar is a bit itchy, that's normal I was told. No redness, no discharge.", expected: [] }
+  - { id: s2-073, message: "Doctor said if my temperature goes over 38 I should ring. It was 37.6 at teatime, is that alright?", expected: [] }
+  - { id: s2-074, message: "Session fine. Question about parking. Also my leg went dead and floppy for about 10 minutes this afternoon and my words came out jumbled, it's passed now", expected: [neurological] }
+  - { id: s2-075, message: "I've had a stroke of luck, found my old walking boots in the loft!", expected: [] }
+  - { id: s2-076, message: "knee's worse today after the long walk", pain_score: 7, previous_pain_score: 3, expected: [pain_jump] }
+  - { id: s2-077, message: "Bad night, couldn't sleep", pain_score: 8, previous_pain_score: 7, expected: [severe_pain] }
+  - { id: s2-078, message: "Bit sore after the stairs", pain_score: 4, previous_pain_score: 1, expected: [pain_jump] }
+  - { id: s2-079, message: "a little worse", pain_score: 7, previous_pain_score: 5, expected: [] }
+  - { id: s2-080, message: "Guten Abend, ich hab seit heute Nachmittag 38,4 und beim Einatmen sticht es rechts in der Brust, und ich krieg schlecht Luft", expected: [wound_or_fever, chest_pain, breathlessness] }
+  - { id: s2-081, message: "Hier ist der Schwiegersohn. Er ist heute beim Üben zu Hause umgekippt, war kurz weg, jetzt redet er ganz verwaschen und der rechte Arm hängt runter", expected: [fall, neurological] }
+  - { id: s2-082, message: "Allet jut bei mir, nur die Olle von nebenan is jestürzt, die hat jetzt'n Gips", expected: [] }
+  - { id: s2-083, message: "Mei, de Treppn san a Graus, obn hob i schnaufa miassn wia a Dampflok, aba nach zwoa Minutn wars wieda guad, so wias d'Therapeutin gsagt hod", expected: [] }
+  - { id: s2-084, message: "I krieg nachts koa Luft ned, muass mi im Bett aufsetzn und ans Fenster", expected: [breathlessness] }
+  - { id: s2-085, message: "Hatte letzten Monat eine Wundinfektion, wurde mit Antibiotika behandelt, jetzt ist alles zu und trocken", expected: [] }
+  - { id: s2-086, message: "Die Ärztin hat gesagt, wenn die Narbe rot wird soll ich anrufen. Sie ist nicht rot. Nur ein bisschen Schorf.", expected: [] }
+  - { id: s2-087, message: "Das Pflaster ist durchgeweicht, gelblich grün und es riecht süßlich", expected: [wound_or_fever] }
+  - { id: s2-088, message: "Ich bin heute ganz fiebrig vor Aufregung, meine Tochter kommt aus Kanada!", expected: [] }
+  - { id: s2-089, message: "Hab fieberhaft nach meiner Brille gesucht, lag im Kühlschrank 🙈 Training ok.", expected: [] }
+  - { id: s2-090, message: "übungen gemacht knie besser schulter nicht so termin donnerstag geht nicht brauch neuen und das linke bein kribbelt seit gestern und ist taub bis zum zeh", expected: [neurological] }
+  - { id: s2-091, message: "Ich hab Kribbeln im Bauch, morgen ist der erste Tag wieder auf der Arbeit", expected: [] }
+  - { id: s2-092, message: "Ich hab in der Selbsthilfegruppe gehört, dass viele nach der OP depressiv werden. Mir gehts zum Glück gut, ich freu mich aufs Frühjahr.", expected: [] }
+  - { id: s2-093, message: "Gestern Abend war ich so traurig und hab gedacht, ich mach dem Ganzen ein Ende. Heute ist es etwas besser, aber der Gedanke kommt immer wieder.", expected: [self_harm] }
+  - { id: s2-094, message: "Wollte nur sagen dass ich nicht hingefallen bin, wie meine Frau Ihnen erzählt hat. Ich hab mich hingekniet um die Katze unterm Sofa vorzuholen und kam nicht mehr hoch", expected: [] }
+  - { id: s2-095, message: "Ich bin vom Fahrrad gefallen, also nicht richtig, eher umgekippt im Stehen an der Ampel, Knie aufgeschürft", expected: [fall] }
+  - { id: s2-096, message: "Bin beim Aussteigen aus dem Bus in die Knie gegangen, der Busfahrer hat mir wieder aufgeholfen", expected: [fall] }
+  - { id: s2-097, message: "Granny asked me to write: she slipped off the edge of the bed onto the floor last night and couldnt get up till morning. She says she's fine but she's very shaky", expected: [fall] }
+  - { id: s2-098, message: "My sister had a heart attack at 60 so I'm a bit paranoid, but no chest pain at all on the bike, just sweaty", expected: [] }
+  - { id: s2-099, message: "hi Sarah comma just to say I've got a temperature of thirty eight point nine full stop feel rough full stop", expected: [wound_or_fever] }
+  - { id: s2-100, message: "My temperature was 98.6 F this morning, totally normal", expected: [] }
+  - { id: s2-101, message: "Breath gets short just walking from the bedroom to the kitchen now, I have to stop halfway and hold on to the door", expected: [breathlessness] }
+  - { id: s2-102, message: "Can't feel my left arm properly and it's heavy as lead, came on all of a sudden an hour ago", expected: [neurological] }
+  - { id: s2-103, message: "They say I'll be fighting fit by Christmas. Feel like I've been hit by a bus today though, just muscle ache from the new exercises.", expected: [] }
+  - { id: s2-104, message: "Unerträglich seit heute Nacht", pain_score: 10, previous_pain_score: 6, expected: [severe_pain] }
+  - { id: s2-105, message: "Hüfte meldet sich nach dem Einkaufen", pain_score: 6, previous_pain_score: 3, expected: [pain_jump] }
+  - { id: s2-106, message: "Alles stabil", pain_score: 2, previous_pain_score: 2, expected: [] }
+  - { id: s2-107, message: "Ausgerutscht auf nassem Laub, aufs Knie, geht aber", pain_score: 5, previous_pain_score: 3, expected: [fall] }
+  - { id: s2-108, message: "Die Narbe ist rot und dick geworden und tut mehr weh", pain_score: 7, previous_pain_score: 4, expected: [wound_or_fever, pain_jump] }
+  - { id: s2-109, message: "Moin, ik heff keen Luft kregen as ik in't Bett leeg, muss mi upsetten, dat is nee", expected: [breathlessness] }
+  - { id: s2-110, message: "Moin! Wind vun vörn bi'n Spazeergang, weer ganz schön ut de Puste, aver dat hört gliek op. Allens schick.", expected: [] }
+  - { id: s2-111, message: "Mir is so komisch inne Brust, so'n Ziehen und Drücken, und mir is kalter Schweiß ausjebrochen", expected: [chest_pain] }
+  - { id: s2-112, message: "Ich hab mir de Brust beim Brustschwimm'n nich verrenkt, keene Bange 😄 War scheen im Bad", expected: [] }
+  - { id: s2-113, message: "Der Hausarzt hat bei meinem Mann eine Lungenentzündung festgestellt, deshalb sag ich den Termin ab. Ich selbst bin fit.", expected: [] }
+  - { id: s2-114, message: "Hab im Fernsehen ne Sendung über Schlaganfall gesehen, Gesicht Arme Sprache Zeit. Hab mich gleich vorm Spiegel getestet, alles normal 😊", expected: [] }
+  - { id: s2-115, message: "Seit Tagen keine Kraft mehr, will nur noch liegen, und manchmal wünsch ich mir, ich würd einfach einschlafen und es wär vorbei", expected: [self_harm] }
+  - { id: s2-116, message: "Das Leben ist schön! Endlich wieder ohne Krücken zum Bäcker", expected: [] }
+  - { id: s2-117, message: "fell asleep in the chair after the exercises, didnt fall out of it though haha", expected: [] }
+  - { id: s2-118, message: "gestürtzt bin ich zum glück nich aber die narbe eitert seit sonntag und ich hab 38,2", expected: [wound_or_fever] }
+  - { id: s2-119, message: "Atemübungen klappen super, ich krieg viel besser Luft als noch in der Klinik", expected: [] }
+  - { id: s2-120, message: "Not a single fall this month! Proud of myself", expected: [] }
+  - { id: s2-121, message: "Ich weiß nicht ob es wichtig ist, aber beim Telefonieren hab ich heute die Wörter verdreht und meine Schwester hat gefragt ob ich getrunken hab. Hab ich nicht.", expected: [neurological] }
+  - { id: s2-122, message: "Hallo, hier schreibt die Ehefrau. Mein Mann hat Angst vorm Hinfallen und traut sich nicht allein raus. Gibt es eine Gangschule in der Nähe?", expected: [] }
+  - { id: s2-123, message: "steady 8 since this morning", pain_score: 8, expected: [severe_pain] }
+  - { id: s2-124, message: "fine", pain_score: 3, expected: [] }
+  - { id: s2-125, message: "Hab gestern beim Spiel mitgefiebert, wir haben gewonnen! Heute ein bisschen heiser vom Schreien", expected: [] }

@@ -1,0 +1,186 @@
+cases:
+  - id: q2-001
+    identity: { full_name: "Jürgen Möllenkamp", birth_date: 1958-03-14, insurance_number: "12 140358 M 51 3", phone: "+49 30 23125417", email: "j.moellenkamp@mail.example" }
+    text: "hallo hier juergen moellenkamp, geb 14.03.58, mein knie ist heute besser, schmerzen nur noch bei der treppe"
+    mentions: ["juergen moellenkamp", "14.03.58"]
+    keep: ["knie", "schmerzen", "treppe"]
+
+  - id: q2-002
+    identity: { full_name: "Birgit Strauß", birth_date: 1949-11-02, insurance_number: "65 021149 S 02 8", phone: "+49 89 99998123", email: "birgit.strauss@post.example" }
+    text: "Guten Tag, ich bin Birgit Strauss (RV-Nr 65021149S028). Die Narbe an der Hüfte ist trocken, Lymphdrainage hilft."
+    mentions: ["Birgit Strauss", "65021149S028"]
+    keep: ["Narbe", "Hüfte", "Lymphdrainage"]
+
+  - id: q2-003
+    identity: { full_name: "Heinz-Dieter Kowalski", birth_date: 1944-07-21, insurance_number: "13 210744 K 03 5", phone: "+49 40 66969250", email: "hd.kowalski@netz.example" }
+    text: "Hier ist die Tochter. Heinz-Dieter Kowalskis rechtes Knie ist nach dem Spaziergang geschwollen. Erreichbar unter 040/66969-250."
+    mentions: ["Heinz-Dieter Kowalskis", "040/66969-250"]
+    keep: ["Knie", "Spaziergang", "geschwollen"]
+
+  - id: q2-004
+    identity: { full_name: "Renate Oberhuber", birth_date: 1952-01-30, insurance_number: "14 300152 O 52 1", phone: "+49 89 99998456", email: "r.oberhuber@bergpost.example" }
+    text: "Übungen erledigt, Schulter zieht noch. Gruß R. Oberhuber, Tel. (089) 99998 456"
+    mentions: ["R. Oberhuber", "(089) 99998 456"]
+    keep: ["Übungen", "Schulter"]
+
+  - id: q2-005
+    identity: { full_name: "Klaus Wendelin", birth_date: 1960-05-09, insurance_number: "28 090560 W 04 6", phone: "+49 30 23125321", email: "k.wendelin@mail.example" }
+    text: "wendelin hier, rücken ok, ergometer 20 min geschafft"
+    mentions: ["wendelin"]
+    keep: ["rücken", "ergometer"]
+
+  - id: q2-006
+    identity: { full_name: "Gerda Pfeiffer-Lindqvist", birth_date: 1951-10-15, insurance_number: "11 151051 P 54 0", phone: "+49 69 90009312", email: "gerda.pfeiffer-lindqvist@heimnetz.example" }
+    text: "Sehr geehrte Frau Therapeutin, die Wassergymnastik tut meinem Knie gut, aber nachts habe ich Wadenkrämpfe.\n\nMit freundlichen Grüßen\nGerda Pfeiffer-Lindqvist\nTel.: +49 (0)69 90009 312\ngerda.pfeiffer-lindqvist@heimnetz.example"
+    mentions: ["Gerda Pfeiffer-Lindqvist", "+49 (0)69 90009 312", "gerda.pfeiffer-lindqvist@heimnetz.example"]
+    keep: ["Wassergymnastik", "Knie", "Wadenkrämpfe"]
+
+  - id: q2-007
+    identity: { full_name: "Hans-Peter Großkreutz", birth_date: 1955-08-17, insurance_number: "26 170855 G 01 2", phone: "+49 30 23125209", email: "hp.grosskreutz@mail.example" }
+    text: "Ich, Hans Peter Grosskreutz, geboren am 17. August 1955, brauche eine Bescheinigung über die Endoprothese, wegen der Gehstützen."
+    mentions: ["Hans Peter Grosskreutz", "17. August 1955"]
+    keep: ["Endoprothese", "Gehstützen"]
+
+  - id: q2-008
+    identity: { full_name: "Margaret O'Donnell-Behrens", birth_date: 1947-04-05, insurance_number: "38 050447 O 57 4", phone: "+49 221 4710118", email: "m.odonnell@post.example" }
+    text: "Hi, it's Margaret O'Donnell-Behrens, DOB 05/04/1947. My new hip is doing great, physio exercises twice daily."
+    mentions: ["Margaret O'Donnell-Behrens", "05/04/1947"]
+    keep: ["hip", "physio", "exercises"]
+
+  - id: q2-009
+    identity: { full_name: "Friedrich Albers", birth_date: 1946-02-22, insurance_number: "42 220246 A 08 1", phone: "+49 30 23125588", email: "f.albers@heim.example" }
+    text: "Bitte rufen Sie mich zurück wegen dem Rezept für Krankengymnastik: 030.23125.588 - F. Albers"
+    mentions: ["030.23125.588", "F. Albers"]
+    keep: ["Rezept", "Krankengymnastik"]
+
+  - id: q2-010
+    identity: { full_name: "Ingeborg Tiedemann", birth_date: 1939-12-24, insurance_number: "53 241239 T 56 7", phone: "+49 40 66969402", email: "i.tiedemann@nord.example" }
+    text: "Meine Mutter Ingeborg hat heute die Treppe mit Geländer geschafft, die Hüfte macht gut mit."
+    mentions: ["Ingeborg"]
+    keep: ["Treppe", "Hüfte"]
+
+  - id: q2-011
+    identity: { full_name: "Sören Bräutigam", birth_date: 1966-02-11, insurance_number: "17 110266 B 03 9", phone: "+49 89 99998611", email: "soeren.b@mail.example" }
+    text: "Soren Brautigam, 11-02-1966, Knie-TEP rechts, Beugung jetzt 95 Grad"
+    mentions: ["Soren Brautigam", "11-02-1966"]
+    keep: ["Knie-TEP", "Beugung"]
+
+  - id: q2-012
+    identity: { full_name: "Waltraud Esser", birth_date: 1950-06-03, insurance_number: "53 030650 E 07 2", phone: "+49 221 4710533", email: "w.esser@rhein.example" }
+    text: "Versicherungsnr. 53 0306 50 E07 2, wegen Antrag auf Nachsorge. Ellenbogen geht wieder besser."
+    mentions: ["53 0306 50 E07 2"]
+    keep: ["Nachsorge", "Ellenbogen"]
+
+  - id: q2-013
+    identity: { full_name: "Thorsten Grünewald", birth_date: 1962-09-28, insurance_number: "21 280962 G 02 3", phone: "+49 40 66969731", email: "t.gruenewald@hafen.example" }
+    text: "thorsten gruenewald, handy kaputt, bitte unter +49 (40) 66969-731 anrufen. hab muskelkater in den oberschenkeln"
+    mentions: ["thorsten gruenewald", "+49 (40) 66969-731"]
+    keep: ["muskelkater", "oberschenkeln"]
+
+  - id: q2-014
+    identity: { full_name: "Annegret Voß", birth_date: 1948-09-03, insurance_number: "65 030948 V 51 8", phone: "+49 221 4710455", email: "annegret.voss@dom.example" }
+    text: "A. Voss, geb. 3/9/48. Seit der Reha laufe ich mit dem Rollator bis zum Markt."
+    mentions: ["A. Voss", "3/9/48"]
+    keep: ["Reha", "Rollator"]
+
+  - id: q2-015
+    identity: { full_name: "Dieter Jäger", birth_date: 1945-03-09, insurance_number: "12 090345 J 02 5", phone: "+49 69 90009228", email: "d.jaeger@main.example" }
+    text: "This is Dieter Jaeger's wife writing. Dieter's back pain is better, he walked 30 minutes yesterday."
+    mentions: ["Dieter Jaeger's", "Dieter's"]
+    keep: ["back pain", "walked"]
+
+  - id: q2-016
+    identity: { full_name: "Hildegard Schäfer-Nowak", birth_date: 1953-07-07, insurance_number: "24 070753 S 56 1", phone: "+49 30 23125146", email: "hilde.schaefer@funk.example" }
+    text: "Bitte schicken Sie den Übungsplan für die Schulter an hilde.schaefer@funk.example, danke!"
+    mentions: ["hilde.schaefer@funk.example"]
+    keep: ["Übungsplan", "Schulter"]
+
+  - id: q2-017
+    identity: { full_name: "Ernst Kühnapfel", birth_date: 1957-10-12, insurance_number: "24 121057 K 50 9", phone: "+49 221 4710382", email: "ernst.kuehnapfel@rhein.example" }
+    text: "Ernst Kühnapfel / RV 24 121057 K 50 9 / geb 12.10.1957 / Tel 0221 4710382 / Hüfte links, Schmerzen beim Sitzen"
+    mentions: ["Ernst Kühnapfel", "24 121057 K 50 9", "12.10.1957", "0221 4710382"]
+    keep: ["Hüfte", "Schmerzen", "Sitzen"]
+
+  - id: q2-018
+    identity: { full_name: "Josef Huberbauer", birth_date: 1949-05-30, insurance_number: "14 300549 H 01 4", phone: "+49 89 99998333", email: "sepp.huberbauer@alm.example" }
+    text: "Griaß Gott, da Huberbauer hier, as Knia is no a bissl gschwolln aba i kimm am Mittwoch zur Therapie"
+    mentions: ["Huberbauer"]
+    keep: ["Knia", "gschwolln", "Therapie"]
+
+  - id: q2-019
+    identity: { full_name: "Gabriele Fuß", birth_date: 1964-12-01, insurance_number: "18 011264 F 52 7", phone: "+49 221 4710290", email: "g.fuss@dom.example" }
+    text: "G. Fuss, Fußgelenk rechts noch steif nach dem Umknicken, Schwellung weg"
+    mentions: ["G. Fuss"]
+    keep: ["Fußgelenk", "steif", "Schwellung"]
+
+  - id: q2-020
+    identity: { full_name: "Brigitte Lammers", birth_date: 1956-06-25, insurance_number: "13 250656 L 54 2", phone: "+49 30 23125604", email: "b.lammers@mail.example" }
+    text: "Hallo hier ist Brigitte Lammers Komma meine Nummer ist null drei null zwei drei eins zwei fünf sechs null vier Punkt Rücken tut weniger weh Punkt"
+    mentions: ["Brigitte Lammers", "null drei null zwei drei eins zwei fünf sechs null vier"]
+    keep: ["Rücken"]
+
+  - id: q2-021
+    identity: { full_name: "Wilhelmine Ostendorp", birth_date: 1941-01-07, insurance_number: "11 070141 O 53 6", phone: "+49 40 66969118", email: "w.ostendorp@deich.example" }
+    text: "Moin, hier Wilhelmine Ostendorp, geb. 07-01-41. De Knee is beter, de Wunn is dicht."
+    mentions: ["Wilhelmine Ostendorp", "07-01-41"]
+    keep: ["Knee", "Wunn"]
+
+  - id: q2-022
+    identity: { full_name: "Rüdiger Lütkemeyer", birth_date: 1959-02-28, insurance_number: "26 280259 L 04 0", phone: "+49 40 66969507", email: "ruediger.l@north.example" }
+    text: "Ruediger Luetkemeyer, born 28 Feb 1959. Shoulder replacement, range of motion better. Reach me at ruediger.l@north.example"
+    mentions: ["Ruediger Luetkemeyer", "28 Feb 1959", "ruediger.l@north.example"]
+    keep: ["Shoulder replacement", "range of motion"]
+
+  - id: q2-023
+    identity: { full_name: "Aylin Demirtaş", birth_date: 1970-04-19, insurance_number: "18 190470 D 55 6", phone: "+49 69 90009477", email: "aylin.d@main.example" }
+    text: "aylin demirtas, rv nummer 18190470 D556, kann ich die reha nachsorge auf abends legen? knie ist besser"
+    mentions: ["aylin demirtas", "18190470 D556"]
+    keep: ["reha nachsorge", "knie"]
+
+  - id: q2-024
+    identity: { full_name: "Manfred Kettelhack", birth_date: 1943-08-14, insurance_number: "42 140843 K 09 3", phone: "+49 40 66969289", email: "m.kettelhack@nord.example" }
+    text: "Bitte Kettelhacks Termin am Freitag verschieben, mein Mann hat Fieber und Husten. Gruß, die Frau von M. Kettelhack"
+    mentions: ["Kettelhacks", "M. Kettelhack"]
+    keep: ["Fieber", "Husten"]
+
+  - id: q2-025
+    identity: { full_name: "Korbinian Aigner", birth_date: 1968-11-11, insurance_number: "14 111168 A 05 2", phone: "+49 89 99998207", email: "korbi.aigner@alm.example" }
+    text: "Rückruf bitte unter +49 (0) 89 / 99998 - 207, Korbinian. Die Achillessehne spannt beim Treppensteigen."
+    mentions: ["+49 (0) 89 / 99998 - 207", "Korbinian"]
+    keep: ["Achillessehne", "Treppensteigen"]
+
+  - id: q2-026
+    identity: { full_name: "Elfriede Zöllner", birth_date: 1963-05-02, insurance_number: "38 020563 Z 58 9", phone: "+49 30 23125833", email: "e.zoellner@spree.example" }
+    text: "Zoellner, Elfriede (2.5.1963) - Gleichgewichtstraining geht gut, Schwindel weniger."
+    mentions: ["Zoellner, Elfriede", "2.5.1963"]
+    keep: ["Gleichgewichtstraining", "Schwindel"]
+
+  - id: q2-027
+    identity: { full_name: "Konstanze von Hallerstein-Brügge", birth_date: 1950-03-03, insurance_number: "28 030350 H 55 4", phone: "+49 69 90009661", email: "k.hallerstein@main.example" }
+    text: "Liebe Frau Therapeutin, Thromboseprophylaxe beendet, die Spritzen sind alle. Herzlich, K. v. Hallerstein-Bruegge"
+    mentions: ["K. v. Hallerstein-Bruegge"]
+    keep: ["Thromboseprophylaxe", "Spritzen"]
+
+  - id: q2-028
+    identity: { full_name: "Gudrun Ebersbach", birth_date: 1954-09-19, insurance_number: "65 190954 E 53 1", phone: "+49 30 23125777", email: "gudrun.ebersbach@elbe.example" }
+    text: "Nu hier is de Gudrun Ebersbach, mei Handy is kabutt, ruft ma bidde uffm Festnetz an 0049 30 23125 777. Dor Rüggn is besser."
+    mentions: ["Gudrun Ebersbach", "0049 30 23125 777"]
+    keep: ["Rüggn"]
+
+  - id: q2-029
+    identity: { full_name: "Peter Hallström", birth_date: 1953-11-30, insurance_number: "21 301153 H 06 8", phone: "+49 221 4710712", email: "p.hallstroem@dom.example" }
+    text: "hey its peter hallstrom (30th November '53) - knee swelling down, did the cycling"
+    mentions: ["peter hallstrom", "30th November '53"]
+    keep: ["knee swelling", "cycling"]
+
+  - id: q2-030
+    identity: { full_name: "Ilse Brüggemann", birth_date: 1940-04-04, insurance_number: "17 040440 B 57 0", phone: "+49 69 90009145", email: "ilse.brueggemann@main.example" }
+    text: "Ich bin die Nachbarin. Frau Brüggemanns Knie ist heute stark geschwollen, sie kann nicht selbst schreiben. Ihre Nummer: 069 90009 145."
+    mentions: ["Brüggemanns", "069 90009 145"]
+    keep: ["Knie", "geschwollen"]
+
+  - id: q2-031
+    identity: { full_name: "Lisa Herz", birth_date: 1972-08-08, insurance_number: "13 080872 H 02 9", phone: "+49 221 4710664", email: "lisa.herz@dom.example" }
+    text: "Frau Herz hier (Lisa Herz, RV 13-080872-H-02-9). Meine Herzfrequenz beim Ergometer war 118, Knie gut."
+    mentions: ["Frau Herz", "Lisa Herz", "13-080872-H-02-9"]
+    keep: ["Herzfrequenz", "Ergometer", "Knie"]
