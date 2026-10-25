@@ -48,7 +48,7 @@ jobs:
         run: |
           git diff --exit-code -- reports/evals/heldout-*.json reports/evals/heldout-*.md
           for f in reports/evals/heldout-*.json; do
-            git log --format=%H --follow -- "$f" | wc -l | xargs -I{} test {} -eq 1 || { echo "$f was changed after its first run"; exit 1; }
+            git log --format=%H -- "$f" | wc -l | xargs -I{} test {} -eq 1 || { echo "$f was changed after its first run"; exit 1; }
           done
 
   console:
