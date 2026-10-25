@@ -1,0 +1,93 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 2s --health-retries 20
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/rehab_aftercare_test
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # the first-run check reads the history of the held-out reports
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.6"
+          bundler-cache: true
+      - name: lint
+        run: bundle exec rubocop
+      - name: security scan
+        run: bundle exec brakeman --no-pager --quiet --exit-on-warn
+      - name: dependency advisories
+        run: bundle exec bundler-audit check --update
+      - name: database
+        run: bin/rails db:create db:schema:load
+      - name: specs
+        run: bundle exec rspec
+      - name: evaluation on the dev set, and its gate
+        run: |
+          RAILS_ENV=development DATABASE_URL=postgres://postgres:postgres@localhost:5432/rehab_aftercare_dev bin/rails db:create db:schema:load
+          RAILS_ENV=development DATABASE_URL=postgres://postgres:postgres@localhost:5432/rehab_aftercare_dev bin/rails "evals:run[ci]"
+          RAILS_ENV=development DATABASE_URL=postgres://postgres:postgres@localhost:5432/rehab_aftercare_dev bin/rails "evals:gate[ci]"
+      - name: recorded first runs are never rewritten
+        run: |
+          git diff --exit-code -- reports/evals/heldout-*.json reports/evals/heldout-*.md
+          for f in reports/evals/heldout-*.json; do
+            git log --format=%H --follow -- "$f" | wc -l | xargs -I{} test {} -eq 1 || { echo "$f was changed after its first run"; exit 1; }
+          done
+
+  console:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  image:
+    needs: [backend, console]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: build the image
+        run: docker build --build-arg VITE_DEMO=1 -t rehab-aftercare:ci .
+      - name: boot it against PostgreSQL and check health and the console
+        run: |
+          docker network create t
+          docker run -d --name db --network t -e POSTGRES_PASSWORD=postgres postgres:16
+          for i in $(seq 1 30); do docker exec db pg_isready -U postgres && break; sleep 1; done
+          docker run -d --name app --network t -p 3000:3000 \
+            -e DATABASE_URL=postgres://postgres:postgres@db:5432/rehab_aftercare \
+            -e SECRET_KEY_BASE=ci-only-0123456789abcdef0123456789abcdef0123456789abcdef0123456789 \
+            -e FORCE_SSL=false -e SEED_DEMO=1 rehab-aftercare:ci
+          for i in $(seq 1 60); do curl -fs localhost:3000/up && break; sleep 2; done
+          curl -fs localhost:3000/up
+          curl -fs -H "Accept: text/html" localhost:3000/enrolments/1 | grep -q "Rehab Aftercare"
+          curl -fs -X POST localhost:3000/api/v1/session -H "Content-Type: application/json" \
+            -d '{"email":"theo@demo.example","password":"demo-password-1"}' | grep -q token
+          docker logs app | tail -20

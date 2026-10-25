@@ -1,6 +1,6 @@
 # Evaluation: regression-set1
 
-Set `heldout/set1 (regression)`, recorded 2026-10-25T13:32:35Z at cc930c0.
+Set `heldout/set1 (regression)`, recorded 2026-10-25T13:56:10Z at 8c625d5.
 
 ## Red flags (rules)
 
@@ -15,3 +15,7 @@ Set `heldout/set1 (regression)`, recorded 2026-10-25T13:32:35Z at cc930c0.
 
 24 texts, 48 identity mentions: 0 survived (0.0%); 0 clinical words lost.
 
+
+## Model screen guarantees (simulated adversarial model)
+
+384 runs in which the model invents a quote, an unknown flag, tries to remove a flag or returns no JSON: 0 violations.

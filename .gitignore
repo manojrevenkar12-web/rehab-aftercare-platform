@@ -17,3 +17,4 @@ node_modules/
 /public/index.html
 /public/assets
 /public/*.svg
+/reports/evals/ci.*

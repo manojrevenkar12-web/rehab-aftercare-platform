@@ -1,0 +1,14 @@
+.git
+.github
+log/*
+tmp/*
+vendor/bundle
+vendor/cache
+coverage
+public/assets
+public/index.html
+web/node_modules
+web/dist
+node_modules
+.env
+config/master.key

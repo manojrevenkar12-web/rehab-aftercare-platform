@@ -1,10 +1,11 @@
 {
   "label": "regression-set1",
   "set": "heldout/set1 (regression)",
-  "recorded_at": "2026-10-25T13:32:35Z",
-  "git": "cc930c0",
+  "recorded_at": "2026-10-25T13:56:10Z",
+  "git": "8c625d5",
   "results": {
     "red_flags": {
+      "screen": "off (rules only)",
       "cases": 96,
       "emergency_recall": 1.0,
       "urgent_recall": 1.0,
@@ -30,6 +31,11 @@
       "leaked": [],
       "clinical_words_lost": 0,
       "lost": []
+    },
+    "screen_guarantees": {
+      "runs": 384,
+      "violations": 0,
+      "examples": []
     }
   }
 }

@@ -7,7 +7,7 @@ RSpec.describe DemoData do
     expect(Patient.count).to eq(8)
     expect(Claim.order(:id).pluck(:status)).to eq(%w[submitted needs_review])
     expect(CheckIn.where(status: "escalated").count).to eq(2)
-    expect(CheckIn.where.not(set_aside: []).count).to eq(1)
+    expect(CheckIn.where("jsonb_array_length(set_aside) > 0").count).to eq(1)
     expect(AiDraft.where(kind: "check_in_reply").pluck(:status)).to contain_exactly("ready", "held")
     expect(AuditEvent.verify_chain).to be_nil
   end

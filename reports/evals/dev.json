@@ -1,8 +1,8 @@
 {
   "label": "dev",
   "set": "dev",
-  "recorded_at": "2026-10-25T13:41:52Z",
-  "git": "81ac9db",
+  "recorded_at": "2026-10-25T13:56:03Z",
+  "git": "8c625d5",
   "results": {
     "red_flags": {
       "screen": "off (rules only)",

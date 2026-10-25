@@ -1,0 +1,37 @@
+# Local run of the whole system with the invented demo clinic:
+#   docker compose up --build    then open http://localhost:3000 and pick a demo person.
+# The model is simulated unless AI_PROVIDER/AI_BASE_URL/AI_MODEL/AI_API_KEY are set.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rehab_aftercare
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      retries: 20
+    volumes: [db:/var/lib/postgresql/data]
+
+  web:
+    build: { context: ., args: { VITE_DEMO: "1" } }
+    depends_on: { db: { condition: service_healthy } }
+    environment: &env
+      DATABASE_URL: postgres://postgres:postgres@db:5432/rehab_aftercare
+      SECRET_KEY_BASE: local-demo-only-change-me-0123456789abcdef0123456789abcdef0123456789abcdef
+      FORCE_SSL: "false"
+      SEED_DEMO: "1"
+      AI_PROVIDER: ${AI_PROVIDER:-simulated}
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_MODEL: ${AI_MODEL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+    ports: ["3000:3000"]
+
+  jobs:
+    build: { context: ., args: { VITE_DEMO: "1" } }
+    depends_on: { web: { condition: service_healthy } }
+    environment: *env
+    command: ["bin/jobs"]
+
+volumes:
+  db:
