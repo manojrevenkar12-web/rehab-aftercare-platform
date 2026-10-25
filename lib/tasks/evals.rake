@@ -1,0 +1,28 @@
+namespace :evals do
+  desc "Run the evaluation on the dev set: bin/rails evals:run[label]"
+  task :run, [ :label ] => :environment do |_, args|
+    label = args[:label] || "dev"
+    doc = Evals::Report.write(label, Evals::Runner.new(Rails.root.join("evals/dev")).run, set: "dev")
+    puts Evals::Report.markdown(doc)
+  end
+
+  desc "Fail when the dev-set report misses a threshold in config/evals.yml"
+  task :gate, [ :label ] => :environment do |_, args|
+    doc = JSON.parse(File.read(Rails.root.join("reports/evals/#{args[:label] || 'dev'}.json")))
+    failures = Evals::Gate.check(doc)
+    if failures.any?
+      warn failures.map { |f| "GATE FAILED: #{f}" }.join("\n")
+      exit 1
+    end
+    puts "evaluation gate passed"
+  end
+
+  desc "Record the first run of a held-out set (once): bin/rails evals:heldout[set]"
+  task :heldout, [ :set ] => :environment do |_, args|
+    set = args[:set] || abort("name the held-out set")
+    dir = Rails.root.join("evals/heldout/#{set}")
+    abort("#{dir} is marked #{dir.join('STATUS').read.strip}; it is no longer held out") if dir.join("STATUS").exist?
+    doc = Evals::Report.write("heldout-#{set}", Evals::Runner.new(dir).run, set: "heldout/#{set}", first_run_only: true)
+    puts Evals::Report.markdown(doc)
+  end
+end

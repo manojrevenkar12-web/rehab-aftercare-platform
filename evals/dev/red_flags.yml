@@ -1,0 +1,45 @@
+# Dev set for the red-flag rules: written alongside the rules, used to tune them, gated in CI.
+# expected: the flags a clinician would want raised for this message (empty = none).
+cases:
+  - { id: de-01, message: "Heute ging es gut, die Übungen klappen immer besser.", expected: [] }
+  - { id: de-02, message: "Beim Bridging zieht es etwas im unteren Rücken, aber nach dem Training ist es wieder weg.", expected: [] }
+  - { id: de-03, message: "Ich hatte heute Brustschmerzen beim Treppensteigen.", expected: [chest_pain] }
+  - { id: de-04, message: "Seit dem Training habe ich so einen Druck auf der Brust.", expected: [chest_pain] }
+  - { id: de-05, message: "Keine Brustschmerzen, keine Atemnot, alles im grünen Bereich.", expected: [] }
+  - { id: de-06, message: "Keine Brustschmerzen, aber ich bin beim Gehen schnell kurzatmig.", expected: [breathlessness] }
+  - { id: de-07, message: "Ich bekomme beim Training keine Luft mehr.", expected: [breathlessness] }
+  - { id: de-08, message: "Mein rechter Fuß fühlt sich seit gestern taub an.", expected: [neurological] }
+  - { id: de-09, message: "Heute Morgen hatte ich ein Kribbeln im Arm und die Sprache war komisch, Sprachprobleme für ein paar Minuten.", expected: [neurological] }
+  - { id: de-10, message: "Ich bin gestern im Bad gestürzt, aber nichts gebrochen.", expected: [fall] }
+  - { id: de-11, message: "Bin beim Spazierengehen hingefallen, das Knie ist geschwollen.", expected: [fall] }
+  - { id: de-12, message: "Ich bin nicht gestürzt, nur etwas gestolpert.", expected: [] }
+  - { id: de-13, message: "Die Wunde am Knie ist gerötet und nässt.", expected: [wound_or_fever] }
+  - { id: de-14, message: "Ich habe seit zwei Tagen Fieber.", expected: [wound_or_fever] }
+  - { id: de-15, message: "Manchmal denke ich, ich will nicht mehr leben.", expected: [self_harm] }
+  - { id: de-16, message: "Ich habe Gedanken, mir etwas anzutun.", expected: [self_harm] }
+  - { id: de-17, message: "Die Übungen sind anstrengend, aber machbar.", expected: [] }
+  - { id: de-18, message: "Schmerzen heute stärker als sonst.", pain_score: 8, expected: [severe_pain] }
+  - { id: de-19, message: "Der Rücken tut mehr weh als letzte Woche.", pain_score: 7, previous_pain_score: 3, expected: [pain_jump] }
+  - { id: de-20, message: "Etwas mehr Muskelkater als sonst.", pain_score: 4, previous_pain_score: 3, expected: [] }
+  - { id: de-21, message: "Ich hatte Atemnot und Druck auf der Brust, musste mich hinsetzen.", expected: [chest_pain, breathlessness] }
+  - { id: de-22, message: "Ohne Atemnot geschafft! Endlich wieder zwei Stockwerke.", expected: [] }
+  - { id: de-23, message: "Ich habe die App heute nicht geöffnet, keine Zeit.", expected: [] }
+  - { id: de-24, message: "Mein Bein war kurz wie gelähmt, jetzt geht es wieder.", expected: [neurological] }
+  - { id: de-25, message: "Leichtes Engegefühl im Brustkorb nach dem Training.", expected: [chest_pain] }
+  - { id: de-26, message: "Die Narbe eitert ein bisschen.", expected: [wound_or_fever] }
+  - { id: de-27, message: "Ich habe keine Taubheit mehr in den Fingern, super!", expected: [] }
+  - { id: de-28, message: "Mir ist nach dem Training schwindelig, aber kein Sturz.", expected: [] }
+  - { id: de-29, message: "Ich habe Angst, dass ich wieder stürze.", expected: [] }
+  - { id: de-30, message: "Heute Schmerz 9 von 10, kaum auszuhalten.", pain_score: 9, expected: [severe_pain] }
+  - { id: en-01, message: "Feeling stronger every week, thanks!", expected: [] }
+  - { id: en-02, message: "I had chest pain during the walking intervals.", expected: [chest_pain] }
+  - { id: en-03, message: "No chest pain, but I get short of breath on the stairs.", expected: [breathlessness] }
+  - { id: en-04, message: "I fell on the stairs yesterday.", expected: [fall] }
+  - { id: en-05, message: "My left hand has been numb since this morning.", expected: [neurological] }
+  - { id: en-06, message: "The wound looks red and swollen.", expected: [wound_or_fever] }
+  - { id: en-07, message: "Some days I just want to end my life.", expected: [self_harm] }
+  - { id: en-08, message: "No numbness, no pain, all good.", expected: [] }
+  - { id: en-09, message: "Pain was worse today.", pain_score: 8, expected: [severe_pain] }
+  - { id: en-10, message: "Did my exercises, a bit tired.", expected: [] }
+  - { id: en-11, message: "I can't breathe properly when I lie down.", expected: [breathlessness] }
+  - { id: en-12, message: "My knee is sore after the step-ups but fine by evening.", expected: [] }

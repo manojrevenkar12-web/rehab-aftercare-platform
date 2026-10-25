@@ -1,0 +1,58 @@
+{
+  "label": "dev",
+  "set": "dev",
+  "recorded_at": "2026-10-25T13:17:33Z",
+  "git": "55f16bf",
+  "results": {
+    "red_flags": {
+      "cases": 42,
+      "emergency_recall": 1.0,
+      "urgent_recall": 1.0,
+      "by_severity": {
+        "emergency": {
+          "expected": 17,
+          "found": 17,
+          "recall": 1.0
+        },
+        "urgent": {
+          "expected": 11,
+          "found": 11,
+          "recall": 1.0
+        }
+      },
+      "false_escalation_rate": 0.0,
+      "wrong": []
+    },
+    "pseudonymization": {
+      "cases": 7,
+      "mentions": 14,
+      "leak_rate": 0.0,
+      "leaked": [],
+      "clinical_words_lost": 0,
+      "lost": []
+    },
+    "drafts": {
+      "cases": 9,
+      "faithful_runs": 9,
+      "false_hold_rate": 0.0,
+      "fault_runs": 34,
+      "fault_catch_rate": 1.0,
+      "by_fault": {
+        "drop_flag": "2/2",
+        "dosing": "6/6",
+        "invented_placeholder": "3/3",
+        "invent_number": "3/3",
+        "stray_number": "3/3",
+        "missing_section": "3/3",
+        "unknown_exercise": "2/2",
+        "level_jump": "2/2",
+        "too_many": "3/3",
+        "out_of_bounds": "3/3",
+        "no_answer": "3/3",
+        "contraindicated": "1/1"
+      },
+      "false_holds": [],
+      "escaped": []
+    }
+  }
+}

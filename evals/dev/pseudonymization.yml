@@ -1,0 +1,38 @@
+# Dev set for the pseudonymiser. mentions: strings that must not survive; keep: clinical words
+# that must survive.
+cases:
+  - id: ps-01
+    identity: { full_name: "Anna Becker", birth_date: 1968-03-14, insurance_number: "65 140368 B 01 2", phone: "+49 30 1234567", email: "anna.becker@mail.example" }
+    text: "Hallo, hier ist Anna Becker, geb. 14.03.1968. Das Knie schmerzt beim Treppensteigen."
+    mentions: ["Anna", "Becker", "14.03.1968"]
+    keep: ["Knie", "schmerzt", "Treppensteigen"]
+  - id: ps-02
+    identity: { full_name: "Anna Becker", birth_date: 1968-03-14, insurance_number: "65 140368 B 01 2" }
+    text: "Meine Versicherungsnummer ist 65140368B012, bitte an die DRV weitergeben. Rücken besser."
+    mentions: ["65140368B012"]
+    keep: ["Rücken", "besser"]
+  - id: ps-03
+    identity: { full_name: "Jürgen Müller-Lüdenscheidt", birth_date: 1955-11-02, phone: "0221 987654" }
+    text: "Gruß, J. Müller-Lüdenscheidt. Rückruf bitte unter 0221/98 76 54. Hüfte ok."
+    mentions: ["Müller", "Lüdenscheidt", "98 76 54"]
+    keep: ["Hüfte"]
+  - id: ps-04
+    identity: { full_name: "Fatma Yilmaz", birth_date: 1979-07-30, email: "f.yilmaz@post.example" }
+    text: "Schreiben Sie mir an f.yilmaz@post.example. Yilmaz hier, die Schulter ist steif."
+    mentions: ["f.yilmaz@post.example", "Yilmaz"]
+    keep: ["Schulter", "steif"]
+  - id: ps-05
+    identity: { full_name: "Peter Schmidt", birth_date: 1960-01-05 }
+    text: "Born 5 January 1960, Peter here. Lower back pain improved after bridging."
+    mentions: ["Peter", "5 January 1960"]
+    keep: ["Lower back pain", "bridging"]
+  - id: ps-06
+    identity: { full_name: "Maria Lange", birth_date: 1972-09-09 }
+    text: "Langes Wochenende, Maria war wandern. Keine Schmerzen."
+    mentions: ["Maria"]
+    keep: ["wandern", "Schmerzen"]
+  - id: ps-07
+    identity: { full_name: "Olaf Krüger", birth_date: 1949-04-21, phone: "+49 171 2345678" }
+    text: "Herr Krüger erreicht man mobil: 0171 2345678. Gleichgewicht besser."
+    mentions: ["Krüger", "2345678"]
+    keep: ["Gleichgewicht"]

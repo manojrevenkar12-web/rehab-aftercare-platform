@@ -1,0 +1,41 @@
+# Dev set for the AI workflows: facts as the application builds them (already pseudonymised).
+cases:
+  - id: reply-de-flags
+    kind: check_in_reply
+    facts: { patient: P-A1, language: de, programme: T-RENA digital, units_done: 7, units_required: 18, pain_score: 6, previous_pain_score: 3,
+             message: "Seit dem Sturz gestern tut der Rücken weh.", red_flags: [{ code: fall, severity: urgent }, { code: pain_jump, severity: urgent }] }
+  - id: reply-en-emergency
+    kind: check_in_reply
+    facts: { patient: P-A2, language: en, programme: IRENA digital, units_done: 12, units_required: 24, pain_score: 3,
+             message: "I had chest pain during the walk.", red_flags: [{ code: chest_pain, severity: emergency }] }
+  - id: reply-de-calm
+    kind: check_in_reply
+    facts: { patient: P-A3, language: de, programme: T-RENA digital, units_done: 16, units_required: 18, pain_score: 2, previous_pain_score: 2,
+             message: "Alles gut, die Übungen fallen leichter.", red_flags: [] }
+  - id: closing-complete
+    kind: closing_report
+    facts: { patient: P-B1, programme: T-RENA digital, status: completed, units_required: 18, units_done: 18, first_unit: "2026-09-10",
+             last_unit: "2026-11-19", weeks: 10, units_per_week: 1.8, pain_start: 5.7, pain_end: 2.3, pain_change: -3.4, effort_mean: 5.5, check_ins: 4, red_flags_seen: [fall] }
+  - id: closing-early-end
+    kind: closing_report
+    facts: { patient: P-B2, programme: IRENA digital, status: ended_early, units_required: 24, units_done: 9, first_unit: "2026-06-02",
+             last_unit: "2026-07-21", weeks: 7, units_per_week: 1.3, pain_start: 6.0, pain_end: 5.3, pain_change: -0.7, check_ins: 2, red_flags_seen: [], end_reason: patient_withdrew }
+  - id: closing-no-pain-data
+    kind: closing_report
+    facts: { patient: P-B3, programme: T-RENA digital, status: completed, units_required: 18, units_done: 18, first_unit: "2026-03-01",
+             last_unit: "2026-05-30", weeks: 13, units_per_week: 1.4, effort_mean: 4.0, check_ins: 0, red_flags_seen: [chest_pain, fall] }
+  - id: plan-progress
+    kind: plan_change
+    facts: { patient: P-C1, indication: orthopaedics, context: [orthopaedics, balance_impaired],
+             plan: [{ exercise_key: pelvic_tilt, level: 1, body_region: lumbar, sets: 2, reps: 10, per_week: 3 }],
+             recent_units: [{ on: "2026-11-01", pain_before: 4, pain_after: 3, effort: 5 }, { on: "2026-11-05", pain_before: 3, pain_after: 2, effort: 5 }] }
+  - id: plan-rising-pain
+    kind: plan_change
+    facts: { patient: P-C2, indication: orthopaedics, context: [orthopaedics],
+             plan: [{ exercise_key: mini_squat, level: 2, body_region: knee, sets: 3, reps: 12, per_week: 3 }, { exercise_key: quad_sets, level: 1, body_region: knee, sets: 2, reps: 15, per_week: 5 }],
+             recent_units: [{ on: "2026-10-20", pain_before: 3, pain_after: 4, effort: 6 }, { on: "2026-10-24", pain_before: 4, pain_after: 6, effort: 7 }] }
+  - id: plan-shoulder
+    kind: plan_change
+    facts: { patient: P-C3, indication: orthopaedics, context: [orthopaedics],
+             plan: [{ exercise_key: pendulum, level: 1, body_region: shoulder, sets: 2, reps: 10, per_week: 4 }],
+             recent_units: [{ on: "2026-08-01", pain_before: 2, pain_after: 2, effort: 3 }, { on: "2026-08-04", pain_before: 2, pain_after: 1, effort: 3 }] }

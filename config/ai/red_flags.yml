@@ -22,6 +22,7 @@ flags:
       - 'atemnot'
       - 'kurzatmig\w*'
       - 'keine\s+luft\s+(mehr\s+)?bekomm\w*'
+      - 'bekomm\w*\s+([[:alpha:]]+\s+){0,4}keine\s+luft'
       - 'luftnot'
       - "(short(ness)? of breath|can'?t breathe|cannot breathe|breathless)"
   neurological:
@@ -45,7 +46,7 @@ flags:
     severity: urgent
     patterns:
       - 'fieber'
-      - 'wunde\s+\w*\s*(rot|ger(ö|oe)tet|eitert|n(ä|ae)sst|geschwollen)'
+      - '(wunde|narbe)\b[^.!?]{0,40}?\b(rot\b|ger(ö|oe)tet|eitert|n(ä|ae)sst|geschwollen)'
       - '(ger(ö|oe)tet|eitert|n(ä|ae)sst)\w*\s+(die\s+)?(wunde|narbe)'
       - '(fever|wound\s+\w*\s*(red|swollen|oozing|infected)|pus)'
   self_harm:
