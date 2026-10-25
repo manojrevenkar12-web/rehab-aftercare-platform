@@ -1,0 +1,34 @@
+# Bootstrap only: resolves the Gemfile on GitHub and pushes the .gem files to the gem-cache
+# branch, for development environments that cannot reach rubygems.org. Run by hand.
+name: gem-cache
+on:
+  workflow_dispatch:
+  push:
+    branches: [bootstrap]
+
+permissions:
+  contents: write
+
+jobs:
+  cache:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.6"
+      - name: resolve and download every gem
+        run: |
+          bundle lock --add-platform x86_64-linux ruby
+          bundle config set --local cache_all_platforms true
+          bundle cache --all --no-install
+          ls vendor/cache | wc -l
+      - name: push the cache to an orphan branch
+        run: |
+          mkdir /tmp/out && cp -r vendor/cache /tmp/out/cache && cp Gemfile Gemfile.lock /tmp/out/
+          cd /tmp/out
+          git init -q -b gem-cache
+          git config user.name "gem-cache bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A && git commit -qm "gem cache for $(sha1sum Gemfile.lock | cut -c1-12)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" gem-cache
