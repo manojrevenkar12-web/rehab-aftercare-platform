@@ -31,7 +31,7 @@ class AuditEvent < ApplicationRecord
   # JSON with keys sorted at every level: PostgreSQL's jsonb reorders keys, the digest must not care.
   def self.canonical(value)
     case value
-    when Hash then value.keys.map(&:to_s).sort.to_h { |k| [k, canonical(value[k] || value[k.to_sym])] }
+    when Hash then value.keys.map(&:to_s).sort.to_h { |k| [ k, canonical(value[k] || value[k.to_sym]) ] }
     when Array then value.map { |v| canonical(v) }
     else value
     end

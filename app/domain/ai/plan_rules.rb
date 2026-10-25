@@ -13,7 +13,7 @@ module Ai
     module_function
 
     def context_tags(indication, flag_codes)
-      ([indication.to_s] + flag_codes.filter_map { |c| FLAG_TAGS[c] }).uniq
+      ([ indication.to_s ] + flag_codes.filter_map { |c| FLAG_TAGS[c] }).uniq
     end
 
     # Returns findings; empty means the change may be shown for approval.
@@ -21,7 +21,7 @@ module Ai
       out = []
       changes = Array(changes)
       out << Checks.blocking(:too_many_changes, "#{changes.size} changes proposed; at most #{MAX_CHANGES}.") if changes.size > MAX_CHANGES
-      current = plan.to_h { |p| [p["exercise_key"], p] }
+      current = plan.to_h { |p| [ p["exercise_key"], p ] }
       max_level = (plan.map { |p| p["level"] }.max || 1)
       changes.each do |c|
         key = c["exercise_key"]

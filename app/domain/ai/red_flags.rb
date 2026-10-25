@@ -20,7 +20,7 @@ module Ai
       @negations = config.fetch("negations").map(&:downcase)
       @window = config.fetch("negation_window")
       @flags = config.fetch("flags").to_h do |code, spec|
-        [code, { severity: spec.fetch("severity"), patterns: spec.fetch("patterns").map { |p| Regexp.new(p, Regexp::IGNORECASE) } }]
+        [ code, { severity: spec.fetch("severity"), patterns: spec.fetch("patterns").map { |p| Regexp.new(p, Regexp::IGNORECASE) } } ]
       end
       @pain = config.fetch("pain")
     end

@@ -8,7 +8,7 @@ module Ai
     class OpenAiCompatible
       class Error < StandardError; end
 
-      RETRYABLE = [408, 409, 429, 500, 502, 503, 504].freeze
+      RETRYABLE = [ 408, 409, 429, 500, 502, 503, 504 ].freeze
 
       attr_reader :model
 

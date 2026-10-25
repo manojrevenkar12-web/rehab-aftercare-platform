@@ -9,7 +9,7 @@ class ApiToken < ApplicationRecord
   def self.issue(user, ttl: TTL)
     raw = SecureRandom.urlsafe_base64(32)
     token = create!(user: user, token_digest: digest(raw), expires_at: ttl.from_now)
-    [token, raw]
+    [ token, raw ]
   end
 
   def self.authenticate(raw)

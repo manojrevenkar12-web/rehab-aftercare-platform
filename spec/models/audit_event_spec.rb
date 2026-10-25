@@ -4,7 +4,7 @@ RSpec.describe AuditEvent do
   let(:user) { create(:user) }
 
   it "chains every event to the one before, and verifies" do
-    3.times { |i| described_class.record!(actor: user, action: "thing.done", data: { "n" => i, "nested" => { "b" => 1, "a" => [2, { "z" => 1, "y" => 2 }] } }) }
+    3.times { |i| described_class.record!(actor: user, action: "thing.done", data: { "n" => i, "nested" => { "b" => 1, "a" => [ 2, { "z" => 1, "y" => 2 } ] } }) }
     expect(described_class.order(:id).pluck(:prev_digest).drop(1)).to eq(described_class.order(:id).pluck(:digest).first(2))
     expect(described_class.verify_chain).to be_nil
   end

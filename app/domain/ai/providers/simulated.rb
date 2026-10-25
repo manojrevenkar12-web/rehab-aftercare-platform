@@ -51,16 +51,16 @@ module Ai
         summary += de ? " Warnzeichen: #{flags.join(', ')}." : " Red flags: #{flags.join(', ')}." if flags.any?
         reply = if de
                   "Vielen Dank für Ihre Rückmeldung. Sie haben bereits #{f['units_done']} von #{f['units_required']} Einheiten geschafft."
-                else
+        else
                   "Thank you for your update. You have already completed #{f['units_done']} of #{f['units_required']} units."
-                end
+        end
         reply += de ? " Ihr Behandlungsteam schaut sich Ihre Angaben heute noch an." : " Your care team will look at this today." if flags.any?
         reply += de ? " Machen Sie die Übungen nur so weit, wie es sich gut anfühlt." : " Only do the exercises as far as they feel comfortable."
         reply += " Nehmen Sie bei Bedarf 400 mg Ibuprofen." if fault?(:dosing)
         reply += " Liebe Grüße an [NAME-3]." if fault?(:invented_placeholder)
         reply += de ? " Sie liegen 85 % über dem Durchschnitt." : " You are 85% above average." if fault?(:stray_number)
         { "summary" => summary, "reply" => reply, "acknowledged_flags" => acknowledged,
-          "questions" => [de ? "Wann treten die Beschwerden auf?" : "When do the symptoms occur?"] }
+          "questions" => [ de ? "Wann treten die Beschwerden auf?" : "When do the symptoms occur?" ] }
       end
 
       # --- closing documentation ---------------------------------------------------------------
@@ -83,9 +83,9 @@ module Ai
                  "In #{f['weeks']} Wochen absolvierte der/die Rehabilitand/in #{units_done} von #{f['units_required']} Einheiten."
         outcome = if f["pain_start"] && f["pain_end"]
                     "Der Schmerz lag zu Beginn im Mittel bei #{de_num(f['pain_start'])} und am Ende bei #{de_num(f['pain_end'])} von 10."
-                  else
+        else
                     "Schmerzwerte wurden nicht durchgehend erfasst."
-                  end
+        end
         outcome += " Die Belastbarkeit stieg um 45 %." if fault?(:stray_number)
         adherence = "Im Mittel #{de_num(f['units_per_week'])} Einheiten pro Woche"
         adherence += f["effort_mean"] ? ", mittlere Anstrengung #{de_num(f['effort_mean'])} von 10." : "."
@@ -101,7 +101,7 @@ module Ai
       # --- plan-change agent -------------------------------------------------------------------
 
       def agent_step(f, messages)
-        return reply(nil, tool_calls: [call("search_exercises", { "body_region" => "lumbar", "max_level" => 1 })]) if fault?(:no_answer)
+        return reply(nil, tool_calls: [ call("search_exercises", { "body_region" => "lumbar", "max_level" => 1 }) ]) if fault?(:no_answer)
 
         tool_results = messages.select { |m| m[:role] == "tool" }.map { |m| JSON.parse(m[:content]) }
         plan = f["plan"]
@@ -110,13 +110,13 @@ module Ai
         case tool_results.size
         when 0
           level = fault?(:level_jump) ? max_level + 3 : max_level + 1
-          reply(nil, tool_calls: [call("search_exercises", { "body_region" => region, "max_level" => level })])
+          reply(nil, tool_calls: [ call("search_exercises", { "body_region" => region, "max_level" => level }) ])
         when 1
           candidates = Array(tool_results.first).reject { |c| plan.any? { |p| p["exercise_key"] == c["exercise_key"] } }
           @candidates = candidates
-          return reply(nil, tool_calls: [call("check_contraindications", { "exercise_key" => "none" })]) if candidates.empty?
+          return reply(nil, tool_calls: [ call("check_contraindications", { "exercise_key" => "none" }) ]) if candidates.empty?
 
-          reply(nil, tool_calls: candidates.first(3).map { |c| call("check_contraindications", { "exercise_key" => c["exercise_key"] }) })
+          reply(nil, tool_calls: candidates.max_by(3) { |c| c["level"] }.map { |c| call("check_contraindications", { "exercise_key" => c["exercise_key"] }) })
         else
           reply(final_plan(f, tool_results.drop(1)))
         end
@@ -126,20 +126,22 @@ module Ai
         plan = f["plan"]
         units = f["recent_units"]
         rising = units.size >= 2 && units.last["pain_after"].to_i > units.first["pain_before"].to_i
+        levels = Array(@candidates).to_h { |c| [ c["exercise_key"], c["level"] ] }
         safe = checks.select { |c| c.is_a?(Hash) && c["ruled_out_by"] == [] }.map { |c| c["exercise_key"] }
+                     .sort_by { |k| [ -levels.fetch(k, 0), k ] }
         unsafe = checks.select { |c| c.is_a?(Hash) && Array(c["ruled_out_by"]).any? }.map { |c| c["exercise_key"] }
         changes = []
         if rising && plan.any?
           top = plan.max_by { |p| p["level"] }
           changes << { "action" => "modify", "exercise_key" => top["exercise_key"], "sets" => top["sets"],
-                       "reps" => [top["reps"] - 4, 4].max, "per_week" => top["per_week"], "reason" => "Pain rose over the last units; reduce load." }
+                       "reps" => [ top["reps"] - 4, 4 ].max, "per_week" => top["per_week"], "reason" => "Pain rose over the last units; reduce load." }
         else
           key = fault?(:contraindicated) ? (unsafe.first || safe.first) : safe.first
           key = "ex_does_not_exist" if fault?(:unknown_exercise)
           changes << { "action" => "add", "exercise_key" => key, "sets" => 2, "reps" => 10, "per_week" => 3, "reason" => "Steady progress; add one exercise one level up." } if key
         end
-        changes.first[ "sets"] = 9 if fault?(:out_of_bounds) && changes.any?
-        changes += plan.first(3).map { |p| p.slice("exercise_key", "sets", "reps", "per_week").merge("action" => "modify", "reason" => "keep") } if fault?(:too_many)
+        changes.first["sets"] = 9 if fault?(:out_of_bounds) && changes.any?
+        changes += Array.new(3) { changes.first || { "action" => "modify", "exercise_key" => plan.first["exercise_key"], "sets" => 2, "reps" => 8, "per_week" => 3, "reason" => "keep" } } if fault?(:too_many)
         { "changes" => changes, "rationale" => rising ? "Pain is rising, so the plan gets lighter." : "Progress is steady, so one exercise is added." }
       end
 

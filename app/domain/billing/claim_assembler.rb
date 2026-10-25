@@ -28,9 +28,9 @@ module Billing
         units = @enrolment.units_done.clamp(0, @enrolment.units_required)
         rules = @enrolment.programme_rules
         status = if blocking.any? { |p| p[:code] == "early_end" } && blocking.size == 1 then "needs_review"
-                 elsif blocking.any? then "draft"
-                 else "ready"
-                 end
+        elsif blocking.any? then "draft"
+        else "ready"
+        end
         claim.assign_attributes(
           number: claim.number || number_for(@enrolment),
           status: status,

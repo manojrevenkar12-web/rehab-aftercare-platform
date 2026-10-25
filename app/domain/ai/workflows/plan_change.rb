@@ -40,7 +40,7 @@ module Ai
           reply = nil
         end
         if reply.nil?
-          return Result.new(output: {}, findings: [Checks.blocking(:no_answer, "No answer after #{MAX_TURNS} turns.")],
+          return Result.new(output: {}, findings: [ Checks.blocking(:no_answer, "No answer after #{MAX_TURNS} turns.") ],
                             model: @client.model, prompt_version: PROMPT_VERSION, trace: trace)
         end
 

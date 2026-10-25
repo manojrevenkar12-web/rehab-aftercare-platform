@@ -1,0 +1,25 @@
+# Who may do what, for every person in spec/support/scenario.rb. A person not listed for an action
+# must be refused. Adding an action here without a lambda in the spec fails the spec, and so does
+# a policy that lets anyone else through.
+#   therapist  - the patient's assigned therapist      colleague - a therapist of the same clinic, not assigned
+#   physician  - a physician of the clinic             billing   - billing staff of the clinic
+#   admin      - the clinic's administrator            patient   - the patient (own record)
+#   outsider   - a physician of another clinic
+patient.show:               [therapist, physician, billing, admin, patient]
+patient.show_clinical:      [therapist, physician, patient]
+patient.update:             [admin]
+enrolment.approve:          [billing, admin]
+enrolment.end_early:        [therapist, physician]
+enrolment.record_unit:      [therapist, patient]
+enrolment.check_in:         [patient]
+check_in.show:              [therapist, physician, patient]
+draft.create.check_in_reply: [therapist]
+draft.create.closing_report: [therapist, physician]
+draft.approve.plan_change:  [therapist]
+draft.show:                 [therapist, physician]
+closing_report.sign:        [physician]
+closing_report.show:        [therapist, physician, billing, admin]
+claim.index:                [billing, admin]
+claim.show:                 [billing, admin]
+claim.submit:               [billing]
+audit.index:                [admin]

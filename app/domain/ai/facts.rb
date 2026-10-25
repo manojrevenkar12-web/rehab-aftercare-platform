@@ -19,14 +19,14 @@ module Ai
         "message" => redacted.text,
         "red_flags" => Array(check_in.red_flags).map { |f| f.slice("code", "severity") }
       }.compact
-      [facts, redacted.mapping]
+      [ facts, redacted.mapping ]
     end
 
     def closing_report(enrolment)
       units = enrolment.counted_units.sort_by(&:performed_on)
       first3 = units.first(3).filter_map(&:pain_before)
       last3 = units.last(3).filter_map(&:pain_after)
-      weeks = units.any? ? [((units.last.performed_on - units.first.performed_on).to_i / 7.0).ceil, 1].max : 0
+      weeks = units.any? ? [ ((units.last.performed_on - units.first.performed_on).to_i / 7.0).ceil, 1 ].max : 0
       before = first3.any? ? (first3.sum.to_f / first3.size).round(1) : nil
       after = last3.any? ? (last3.sum.to_f / last3.size).round(1) : nil
       flags = enrolment.check_ins.flat_map { |c| Array(c.red_flags).map { |f| f["code"] } }.uniq

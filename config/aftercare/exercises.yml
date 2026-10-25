@@ -1,0 +1,23 @@
+# The exercise library the plan agent may choose from. Contraindications are context tags: the
+# patient's indication and tags derived from recent red flags (Ai::PlanRules::FLAG_TAGS).
+exercises:
+  pelvic_tilt:        { name: "Pelvic tilt",               body_region: lumbar,   level: 1, contraindications: [] }
+  bridging:           { name: "Bridging",                  body_region: lumbar,   level: 1, contraindications: [acute_pain] }
+  bird_dog:           { name: "Bird dog",                  body_region: lumbar,   level: 2, contraindications: [balance_impaired, acute_pain] }
+  dead_bug:           { name: "Dead bug",                  body_region: lumbar,   level: 2, contraindications: [] }
+  side_plank_knees:   { name: "Side plank on knees",       body_region: lumbar,   level: 3, contraindications: [acute_pain, cardiac_unstable] }
+  single_leg_bridge:  { name: "Single-leg bridge",         body_region: lumbar,   level: 3, contraindications: [acute_pain] }
+  quad_sets:          { name: "Quadriceps sets",           body_region: knee,     level: 1, contraindications: [] }
+  heel_slides:        { name: "Heel slides",               body_region: knee,     level: 1, contraindications: [] }
+  mini_squat:         { name: "Mini squat at the counter", body_region: knee,     level: 2, contraindications: [acute_pain] }
+  step_ups:           { name: "Step-ups",                  body_region: knee,     level: 3, contraindications: [balance_impaired, acute_pain] }
+  split_squat:        { name: "Split squat",               body_region: knee,     level: 4, contraindications: [balance_impaired, acute_pain, cardiac_unstable] }
+  pendulum:           { name: "Pendulum swings",           body_region: shoulder, level: 1, contraindications: [] }
+  wall_slides:        { name: "Wall slides",               body_region: shoulder, level: 2, contraindications: [] }
+  band_external_rot:  { name: "Band external rotation",    body_region: shoulder, level: 2, contraindications: [acute_pain] }
+  band_rows:          { name: "Band rows",                 body_region: shoulder, level: 3, contraindications: [cardiac_unstable] }
+  sit_to_stand:       { name: "Sit to stand",              body_region: balance,  level: 1, contraindications: [] }
+  tandem_stance:      { name: "Tandem stance at the wall", body_region: balance,  level: 2, contraindications: [] }
+  single_leg_stance:  { name: "Single-leg stance",         body_region: balance,  level: 3, contraindications: [balance_impaired, neuro_acute] }
+  walking_intervals:  { name: "Walking intervals",         body_region: endurance, level: 2, contraindications: [cardiac_unstable, infection] }
+  stair_climbing:     { name: "Stair climbing",            body_region: endurance, level: 3, contraindications: [cardiac_unstable, balance_impaired, infection] }

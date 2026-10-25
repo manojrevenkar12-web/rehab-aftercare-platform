@@ -26,16 +26,17 @@ module Ai
 
       mapping = {}
       out = text.dup
-      replacements.each do |placeholder, patterns|
+      # Structured identifiers first (an e-mail address contains the name), then names.
+      ordered = replacements.reject { |k, _| k.start_with?("[NAME") }.to_a +
+                [ [ "[E-MAIL]", [ EMAIL ] ], [ "[INSURANCE-NO]", [ RVNR ] ], [ "[PHONE]", [ PHONE ] ] ] +
+                replacements.select { |k, _| k.start_with?("[NAME") }.to_a
+      ordered.each do |placeholder, patterns|
         patterns.each do |re|
           out = out.gsub(re) do |hit|
             mapping[placeholder] ||= hit
             placeholder
           end
         end
-      end
-      { "[E-MAIL]" => EMAIL, "[INSURANCE-NO]" => RVNR, "[PHONE]" => PHONE }.each do |placeholder, re|
-        out = out.gsub(re) { |hit| (mapping[placeholder] ||= hit) && placeholder }
       end
       Result.new(text: out, mapping: mapping)
     end
@@ -70,12 +71,12 @@ module Ai
     def replacements
       @replacements ||= begin
         out = {}
-        out["[NAME]"] = [word(@identity[:full_name])] if @identity[:full_name]
-        name_parts.each_with_index { |part, i| out["[NAME-#{i + 1}]"] = [word(part)] }
+        out["[NAME]"] = [ word(@identity[:full_name]) ] if @identity[:full_name]
+        name_parts.each_with_index { |part, i| out["[NAME-#{i + 1}]"] = [ word(part) ] }
         out["[BIRTH-DATE]"] = date_patterns(@identity[:birth_date]) if @identity[:birth_date]
-        out["[INSURANCE-NO]"] = [spaced(@identity[:insurance_number])] if @identity[:insurance_number]
-        out["[E-MAIL]"] = [Regexp.new(Regexp.escape(@identity[:email]), Regexp::IGNORECASE)] if @identity[:email]
-        out["[PHONE]"] = [digits_pattern(@identity[:phone])] if @identity[:phone]
+        out["[INSURANCE-NO]"] = [ spaced(@identity[:insurance_number]) ] if @identity[:insurance_number]
+        out["[E-MAIL]"] = [ Regexp.new(Regexp.escape(@identity[:email]), Regexp::IGNORECASE) ] if @identity[:email]
+        out["[PHONE]"] = [ digits_pattern(@identity[:phone]) ] if @identity[:phone]
         out
       end
     end
@@ -124,7 +125,7 @@ module Ai
     def month_names(m)
       de = %w[Januar Februar März April Mai Juni Juli August September Oktober November Dezember]
       en = Date::MONTHNAMES.compact
-      [de[m - 1], en[m - 1], de[m - 1].sub("ä", "ae")]
+      [ de[m - 1], en[m - 1], de[m - 1].sub("ä", "ae") ]
     end
   end
 end

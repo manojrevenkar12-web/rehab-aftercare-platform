@@ -7,7 +7,7 @@ RSpec.describe Enrolment do
 
   before { travel_to Date.new(2026, 12, 1) }
 
-  def unit(day, key: SecureRandom.hex(4), minutes: 20, pain: [5, 4])
+  def unit(day, key: SecureRandom.hex(4), minutes: 20, pain: [ 5, 4 ])
     enrolment.record_unit!({ performed_on: day, duration_minutes: minutes, source: "therapist", pain_before: pain[0], pain_after: pain[1],
                              idempotency_key: key }, actor: therapist)
   end
@@ -64,7 +64,7 @@ RSpec.describe Enrolment do
     unit(Date.new(2026, 9, 10))
     enrolment.apply_deadlines!(today: Date.new(2026, 11, 30))
     expect(enrolment.reload.status).to eq("active")
-    expect(enrolment.deadlines.findings(Date.new(2026, 11, 30)).map(&:code)).to eq([:break_exceeded])
+    expect(enrolment.deadlines.findings(Date.new(2026, 11, 30)).map(&:code)).to eq([ :break_exceeded ])
     enrolment.end_early!(reason: "goal_unreachable", on: Date.new(2026, 11, 30), actor: therapist)
     expect(enrolment.reload.status).to eq("ended_early")
   end

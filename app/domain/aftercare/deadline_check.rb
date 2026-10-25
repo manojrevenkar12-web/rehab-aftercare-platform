@@ -31,7 +31,7 @@ module Aftercare
     end
 
     def longest_break_days(today)
-      dates = [*@unit_dates, today]
+      dates = [ *@unit_dates, today ]
       dates.each_cons(2).map { |a, b| (b - a).to_i }.max || 0
     end
 
@@ -43,11 +43,11 @@ module Aftercare
 
     def start_findings(today)
       if today > @latest_start
-        [Finding.new(:start_missed, :blocking, @latest_start, "No unit by #{@latest_start}: the programme can no longer start.")]
+        [ Finding.new(:start_missed, :blocking, @latest_start, "No unit by #{@latest_start}: the programme can no longer start.") ]
       elsif today >= warn_from(@latest_start)
-        [Finding.new(:start_due, :urgent, @latest_start, "Must start by #{@latest_start}.")]
+        [ Finding.new(:start_due, :urgent, @latest_start, "Must start by #{@latest_start}.") ]
       elsif today > @ideal_start
-        [Finding.new(:start_late, :notice, @latest_start, "Past the 6-week ideal start (#{@ideal_start}); latest start #{@latest_start}.")]
+        [ Finding.new(:start_late, :notice, @latest_start, "Past the 6-week ideal start (#{@ideal_start}); latest start #{@latest_start}.") ]
       else
         []
       end
@@ -58,10 +58,10 @@ module Aftercare
       gap = (today - last).to_i
       limit = @rules.max_break_weeks * 7
       if gap > limit
-        [Finding.new(:break_exceeded, :blocking, last + limit.days,
-                     "No unit for #{gap} days (limit #{limit}): a therapist must decide whether the aftercare goal is still reachable.")]
+        [ Finding.new(:break_exceeded, :blocking, last + limit.days,
+                     "No unit for #{gap} days (limit #{limit}): a therapist must decide whether the aftercare goal is still reachable.") ]
       elsif gap > limit - @rules.warn_days_before
-        [Finding.new(:break_long, :urgent, last + limit.days, "No unit for #{gap} days; the break limit is reached on #{last + limit.days}.")]
+        [ Finding.new(:break_long, :urgent, last + limit.days, "No unit for #{gap} days; the break limit is reached on #{last + limit.days}.") ]
       else
         []
       end
@@ -69,9 +69,9 @@ module Aftercare
 
     def finish_findings(today)
       if today > @latest_finish
-        [Finding.new(:finish_missed, :blocking, @latest_finish, "Past the last day (#{@latest_finish}); no extension is possible.")]
+        [ Finding.new(:finish_missed, :blocking, @latest_finish, "Past the last day (#{@latest_finish}); no extension is possible.") ]
       elsif today >= @latest_finish - 30.days
-        [Finding.new(:finish_due, :urgent, @latest_finish, "The programme must finish by #{@latest_finish}.")]
+        [ Finding.new(:finish_due, :urgent, @latest_finish, "The programme must finish by #{@latest_finish}.") ]
       else
         []
       end

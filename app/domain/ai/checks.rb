@@ -33,7 +33,7 @@ module Ai
       when Array then value.each { |v| number_forms(v, out) }
       when Integer then out << value.to_s << value.abs.to_s
       when Float
-        [value, value.abs].each do |v|
+        [ value, value.abs ].each do |v|
           out << v.round(1).to_s << v.round.to_s << format("%.1f", v) << v.to_s << v.round(1).to_s.sub(/\.0\z/, "")
         end
       when String
@@ -55,7 +55,7 @@ module Ai
     DOSING = /\b\d+\s?(mg|milligramm|ml|tabletten?|tablets?|tropfen|drops)\b|\b(ibuprofen|paracetamol|diclofenac|novalgin|metamizol|tramadol|aspirin)\b/i
 
     def dosing_advice(text)
-      text.to_s.scan(DOSING).any? ? [text.to_s[DOSING]] : []
+      text.to_s.scan(DOSING).any? ? [ text.to_s[DOSING] ] : []
     end
 
     PLACEHOLDER = /\[(NAME(?:-\d+)?|BIRTH-DATE|INSURANCE-NO|E-MAIL|PHONE)\]/

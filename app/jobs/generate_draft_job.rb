@@ -12,14 +12,14 @@ class GenerateDraftJob < ApplicationJob
     e = draft.enrolment
     pseudonymizer = Ai::Pseudonymizer.new(e.patient.identity)
     result = case draft.kind
-             when "check_in_reply"
+    when "check_in_reply"
                facts, mapping = Ai::Facts.check_in(e.check_ins.find(draft.output.fetch("check_in_id")), pseudonymizer)
                Ai::Workflows::CheckInReply.new(client: client).call(facts, guard: pseudonymizer, mapping: mapping)
-             when "closing_report"
+    when "closing_report"
                Ai::Workflows::ClosingReport.new(client: client).call(Ai::Facts.closing_report(e), guard: pseudonymizer)
-             when "plan_change"
+    when "plan_change"
                Ai::Workflows::PlanChange.new(client: client).call(Ai::Facts.plan(e), library: Care::Library.to_h, guard: pseudonymizer)
-             end
+    end
     output = result.output.is_a?(Hash) ? result.output.merge(draft.output.slice("check_in_id")) : draft.output
     draft.update!(status: result.blocking? ? "held" : "ready", output: output, findings: result.findings.map(&:to_h),
                   model: result.model, prompt_version: result.prompt_version)

@@ -19,7 +19,7 @@ module Api
       def approve
         draft = AiDraft.find(params[:id])
         authorize draft
-        edits = params[:edits]&.permit(:reply, :course, :outcome, :adherence, :recommendation, changes: [%i[action exercise_key sets reps per_week reason]])&.to_h
+        edits = params[:edits]&.permit(:reply, :course, :outcome, :adherence, :recommendation, changes: [ %i[action exercise_key sets reps per_week reason] ])&.to_h
         edits&.dig("changes")&.each { |c| %w[sets reps per_week].each { |k| c[k] = Integer(c[k]) if c[k] } }
         Care::DraftReview.new(draft, actor: current_user).approve!(edits: edits.presence)
         render json: Presenters.draft(draft.reload)

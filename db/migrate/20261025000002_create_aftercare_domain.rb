@@ -44,7 +44,7 @@ class CreateAftercareDomain < ActiveRecord::Migration[8.1]
       t.string :indication, null: false # orthopaedics, neurology, cardiology, obesity, psychosomatics
       t.timestamps
       t.index :pseudonym, unique: true
-      t.index [:clinic_id, :insurance_number], unique: true
+      t.index [ :clinic_id, :insurance_number ], unique: true
     end
 
     create_table :care_assignments do |t|
@@ -52,7 +52,7 @@ class CreateAftercareDomain < ActiveRecord::Migration[8.1]
       t.references :therapist, null: false, foreign_key: { to_table: :users }
       t.boolean :active, null: false, default: true
       t.timestamps
-      t.index [:patient_id, :therapist_id], unique: true
+      t.index [ :patient_id, :therapist_id ], unique: true
     end
 
     create_table :enrolments do |t|
@@ -84,8 +84,8 @@ class CreateAftercareDomain < ActiveRecord::Migration[8.1]
       t.text :note
       t.string :idempotency_key, null: false
       t.timestamps
-      t.index [:enrolment_id, :idempotency_key], unique: true
-      t.index [:enrolment_id, :performed_on]
+      t.index [ :enrolment_id, :idempotency_key ], unique: true
+      t.index [ :enrolment_id, :performed_on ]
       t.check_constraint "source IN ('patient_app','therapist')", name: "training_units_source_known"
       t.check_constraint "pain_before BETWEEN 0 AND 10 AND pain_after BETWEEN 0 AND 10", name: "training_units_pain_scale"
       t.check_constraint "effort IS NULL OR effort BETWEEN 0 AND 10", name: "training_units_effort_scale"
@@ -117,7 +117,7 @@ class CreateAftercareDomain < ActiveRecord::Migration[8.1]
       t.text :error
       t.datetime :reviewed_at
       t.timestamps
-      t.index [:enrolment_id, :kind, :input_digest], unique: true, name: "ai_drafts_one_per_input"
+      t.index [ :enrolment_id, :kind, :input_digest ], unique: true, name: "ai_drafts_one_per_input"
       t.check_constraint "kind IN ('check_in_reply','closing_report','plan_change')", name: "ai_drafts_kind_known"
       t.check_constraint "status IN ('queued','ready','held','failed','approved','rejected')", name: "ai_drafts_status_known"
     end
@@ -180,7 +180,7 @@ class CreateAftercareDomain < ActiveRecord::Migration[8.1]
       t.string :digest, null: false
       t.datetime :created_at, null: false
       t.index :digest, unique: true
-      t.index [:subject_type, :subject_id]
+      t.index [ :subject_type, :subject_id ]
     end
 
     reversible do |dir|
