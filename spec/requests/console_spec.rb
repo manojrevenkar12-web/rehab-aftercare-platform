@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "The console" do
+RSpec.describe "The console", type: :request do
   around do |ex|
     index = Rails.public_path.join("index.html")
     existed = index.exist?
