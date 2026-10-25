@@ -1,0 +1,97 @@
+cases:
+  - { id: h-001, message: "hab mich heute beim aufstehen vom sofa hingelegt, also richtig hingefallen, aufs knie. geht aber schon wieder", expected: [fall] }
+  - { id: h-002, message: "Training war gut, keine Brustschmerzen mehr seit der Medikamentenumstellung, nur die Waden brennen ein bisschen", expected: [] }
+  - { id: h-003, message: "Bin total aus der Puste nach den 2 Etagen, aber das ist ja normal bei mir, nach ner Minute wieder ok", expected: [] }
+  - { id: h-004, message: "kriege nachts im liegen kaum luft, muss mich hinsetzen damit es geht", expected: [breathlessness] }
+  - { id: h-005, message: "Habe große Angst zu stürzen, deshalb geh ich nur noch mit Rollator raus", expected: [] }
+  - { id: h-006, message: "Mir ist gestern im Bad das Bein weggeknickt und ich saß auf einmal auf dem Boden. Nix gebrochen glaub ich", expected: [fall] }
+  - { id: h-007, message: "Die Narbe am Knie ist seit gestern dick und rot und warm, und da kommt so gelbliches Zeug raus", expected: [wound_or_fever] }
+  - { id: h-008, message: "Narbe sieht gut aus, trocken, nicht rot. Juckt halt", expected: [] }
+  - { id: h-009, message: "had 38.6 last night, feeling shivery, still did the exercises though", expected: [wound_or_fever] }
+  - { id: h-010, message: "Fieber gemessen weil mir warm war: 36,9. Alles gut also", expected: [] }
+  - { id: h-011, message: "heute war echt hart, Knie tut sauweh", pain_score: 8, previous_pain_score: 7, expected: [severe_pain] }
+  - { id: h-012, message: "Nach dem Radfahren mehr Schmerzen als sonst in der Hüfte", pain_score: 7, previous_pain_score: 4, expected: [pain_jump] }
+  - { id: h-013, message: "bissl mehr ziehen in der Schulter, nix wildes", pain_score: 6, previous_pain_score: 4, expected: [] }
+  - { id: h-014, message: "Rücken komplett zu, kann kaum laufen", pain_score: 9, previous_pain_score: 3, expected: [severe_pain] }
+  - { id: h-015, message: "hab jetzt doch etwas schmerzen beim treppen steigen", pain_score: 3, previous_pain_score: 0, expected: [pain_jump] }
+  - { id: h-016, message: "minimal ziehen in der leiste, eher so ein gefühl als schmerz", pain_score: 2, previous_pain_score: 0, expected: [] }
+  - { id: h-017, message: "Ich will nicht mehr. Ehrlich, manchmal denk ich es wär besser wenn ich morgens einfach nicht mehr aufwache.", expected: [self_harm] }
+  - { id: h-018, message: "Die Übungen bringen mich noch um 😂 aber ich zieh durch", expected: [] }
+  - { id: h-019, message: "I'm dying to get back on the golf course, when can I start swinging again?", expected: [] }
+  - { id: h-020, message: "Seit heute früh ist meine linke Hand ganz taub und ich krieg die Kaffeetasse nicht richtig gehalten", expected: [neurological] }
+  - { id: h-021, message: "Bein ist beim Fernsehen eingeschlafen, nach dem Aufstehen kribbelte es kurz, dann war wieder alles normal", expected: [] }
+  - { id: h-022, message: "meine frau sagt ich red seit dem mittagsschlaf so verwaschen und der mundwinkel hängt", expected: [neurological] }
+  - { id: h-023, message: "Druck auf der Brust beim Ergometer, hab abgebrochen, jetzt im Sitzen wieder weg", expected: [chest_pain] }
+  - { id: h-024, message: "Hatte 2019 meinen Herzinfarkt mit starken Brustschmerzen, seitdem nie wieder sowas. Heute 20 min Ergo ohne Probleme", expected: [] }
+  - { id: h-025, message: "chest feels tight when I walk uphill, and I get short of breath way more than before", expected: [chest_pain, breathlessness] }
+  - { id: h-026, message: "Muskelkater in den Oberschenkeln vom Kniebeugen, aber kein Vergleich zu letzter Woche", expected: [] }
+  - { id: h-027, message: "Bin heute auf dem Weg zur Physio auf dem Glatteis ausgerutscht und hingeknallt, Handgelenk tut weh", pain_score: 5, previous_pain_score: 3, expected: [fall] }
+  - { id: h-028, message: "Ich bin vor dem Unfall vor 6 Jahren mal vom Dach gefallen, daher kommt ja das ganze mit der Wirbelsäule. Heute Übungen 1-6 gemacht", expected: [] }
+  - { id: h-029, message: "Fast gestürzt beim Duschen, konnte mich grad noch am Griff festhalten", expected: [] }
+  - { id: h-030, message: "Wunde am Bauch nässt ein bissl und ist rundherum gerötet", expected: [wound_or_fever] }
+  - { id: h-031, message: "Pflaster ab, Wunde zu, sieht blass aus, kein Eiter, nix", expected: [] }
+  - { id: h-032, message: "Hab keine Luftnot, keine Brustschmerzen, nur müde. Schlaf schlecht wegen der Hitze", expected: [] }
+  - { id: h-033, message: "Mir geht's psychisch grad nicht so gut, alles ist zäh, aber ich würd mir nie was antun, keine Sorge. Hab nächste Woche Termin bei der Psychologin", expected: [] }
+  - { id: h-034, message: "Hab manchmal Gedanken mir was anzutun wenn die Schmerzen so schlimm sind", pain_score: 7, previous_pain_score: 6, expected: [self_harm] }
+  - { id: h-035, message: "Keine Lust mehr auf die blöden Gummibänder. Kann ich die Übung durch was anderes ersetzen?", expected: [] }
+  - { id: h-036, message: "hi, kurze frage wegen termin am donnerstag, kann ich auf 14 uhr verschieben? sonst alles gut", expected: [] }
+  - { id: h-037, message: "Gestern Abend 39,2 Fieber, heute 38. Narbe ist unauffällig.", expected: [wound_or_fever] }
+  - { id: h-038, message: "Mi hods heid im Gartn dabreselt, bin aufn Hintern gfoin. Is aba nix passiert.", expected: [fall] }
+  - { id: h-039, message: "I han so a Ziehe in dr Bruscht ghet beim Laufa, des isch mir fei net ganz geheuer", expected: [chest_pain] }
+  - { id: h-040, message: "Hück wor joot, dat Knie hält. E bessje Ping nom Laufe, wie immer", pain_score: 3, previous_pain_score: 3, expected: [] }
+  - { id: h-041, message: "Laufband 25 min, bisschen außer Atem am Ende wie immer, Puls 118", expected: [] }
+  - { id: h-042, message: "I get breathless just walking to the kitchen now, last week I could do the whole park loop", expected: [breathlessness] }
+  - { id: h-043, message: "My face felt weird on one side for like 10 minutes and I couldn't get my words out, it's gone now", expected: [neurological] }
+  - { id: h-044, message: "my legs feel heavy and tired after the session, normal?", expected: [] }
+  - { id: h-045, message: "Schwindel beim schnellen Aufstehen, kurz schwarz vor Augen, dann gings", expected: [] }
+  - { id: h-046, message: "Rechter Arm ist seit dem Aufwachen schlapp, kann ihn kaum heben, war gestern noch normal", expected: [neurological] }
+  - { id: h-047, message: "Schulter nach OP natürlich noch eingeschränkt, Arm heben geht bis 90 Grad, Physio sagt passt", expected: [] }
+  - { id: h-048, message: "Ich hab meinem Enkel erzählt dass ich letzte Woche gestürzt bin, er meint ich soll es Ihnen sagen. War im Flur, Teppichkante. Hab nur nen blauen Fleck", expected: [fall] }
+  - { id: h-049, message: "No falls, no fever, wound fine. Pain a bit better today", pain_score: 3, previous_pain_score: 5, expected: [] }
+  - { id: h-050, message: "Hab null Bock mehr auf alles. Seit Wochen. Manchmal überleg ich, ob ich die ganzen Tabletten auf einmal nehm.", expected: [self_harm] }
+  - { id: h-051, message: "Nach dem Schwimmen kurz Engegefühl in der Brust, war aber eher die Kälte glaub ich, nach 5 min weg", expected: [chest_pain] }
+  - { id: h-052, message: "Das ziehen in der Brust kommt wenn ich auf die Rippen drücke, seit dem Bankdrücken am Montag", expected: [chest_pain] }
+  - { id: h-053, message: "Kein Druck auf der Brust mehr seit dem Stent, Ergometer 75 Watt geschafft!!", expected: [] }
+  - { id: h-054, message: "immer noch gleich schlimm wie gestern, die Tabletten helfen kaum", pain_score: 8, previous_pain_score: 8, expected: [severe_pain] }
+  - { id: h-055, message: "Knie wie gestern, auszuhalten mit Ibu", pain_score: 7, previous_pain_score: 7, expected: [] }
+  - { id: h-056, message: "HEXENSCHUSS beim schuhe binden, komm nicht mehr hoch", pain_score: 10, previous_pain_score: 2, expected: [severe_pain] }
+  - { id: h-057, message: "Knie dick nach dem Wandern, hab gekühlt", pain_score: 5, previous_pain_score: 2, expected: [pain_jump] }
+  - { id: h-058, message: "etwas mehr als gestern, war aber auch länger draußen", pain_score: 4, previous_pain_score: 2, expected: [] }
+  - { id: h-059, message: "Bin gestolpert und auf die operierte Hüfte gefallen, seitdem tut es mehr weh", pain_score: 6, previous_pain_score: 3, expected: [fall, pain_jump] }
+  - { id: h-060, message: "Narbe ist leicht gerötet am unteren Ende, sonst trocken. Soll ich mir Sorgen machen?", expected: [wound_or_fever] }
+  - { id: h-061, message: "Rote Stelle am Unterschenkel vom Kompressionsstrumpf, keine Wunde, drückt halt", expected: [] }
+  - { id: h-062, message: "The incision looks a bit puffy and there's some pus at the top staple", expected: [wound_or_fever] }
+  - { id: h-063, message: "Ich hatte letzte Woche Fieber, war ne Erkältung, jetzt seit 4 Tagen fieberfrei", expected: [] }
+  - { id: h-064, message: "Hatte Angst, dass ich wieder Brustschmerzen krieg, deshalb nur halbe Runde. Ging aber alles ohne Beschwerden", expected: [] }
+  - { id: h-065, message: "Sport heute ausgefallen weil ich mit meiner Tochter beim Arzt war (ihr gehts gut). Mir auch, keine Beschwerden", expected: [] }
+  - { id: h-066, message: "Mein Mann ist gestern gestürzt, ich musste ihm aufhelfen, deshalb hab ich heute Rücken", pain_score: 4, previous_pain_score: 3, expected: [] }
+  - { id: h-067, message: "my neighbour's dog knocked me over in the stairwell lol, landed on my bum, all fine", expected: [fall] }
+  - { id: h-068, message: "Mein Fuß kribbelt seit drei Tagen dauerhaft und fühlt sich taub an, auch im Liegen", expected: [neurological] }
+  - { id: h-069, message: "Bin heute 2x hingefallen. Einmal in der Küche einmal im Garten. Und Brust drückt seit dem Nachmittag", expected: [fall, chest_pain] }
+  - { id: h-070, message: "Fühl mich schlapp wie ein nasser Sack aber sonst ok. Keine Schmerzen.", pain_score: 1, previous_pain_score: 2, expected: [] }
+  - { id: h-071, message: "Seit die Wunde nässt hab ich auch 38,2, ist das normal? Und mir ist schwindelig", expected: [wound_or_fever] }
+  - { id: h-072, message: "Hab mich gestern so über die Krankenkasse geärgert, ich könnt die alle umbringen 🙄 Übungen trotzdem gemacht", expected: [] }
+  - { id: h-073, message: "If this knee doesn't get better I honestly don't see the point of going on living like this", expected: [self_harm] }
+  - { id: h-074, message: "I don't see the point of the band exercises, they feel too easy. Can we make them harder?", expected: [] }
+  - { id: h-075, message: "Danke für den neuen Plan! Bauchlage geht jetzt besser. Bis Mittwoch", expected: [] }
+  - { id: h-076, message: "kurzatmig beim reden, schon im sitzen, lippen sehen bissl blau aus", expected: [breathlessness] }
+  - { id: h-077, message: "I hob mi ned higlegt, i bin nur fast gfoin, owa des Knie hod ghoitn", expected: [] }
+  - { id: h-078, message: "Brustschmerzen? Nein. Atemnot? Nein. Sturz? Nein. Wie im Fragebogen halt 😄 Knie wie immer", pain_score: 4, previous_pain_score: 4, expected: [] }
+  - { id: h-079, message: "Hüfte schlimmer nach dem Stolpern, bin aber nicht gefallen", pain_score: 8, previous_pain_score: 5, expected: [severe_pain] }
+  - { id: h-080, message: "Heute komplett schmerzfrei!!! Erstes Mal seit OP", pain_score: 0, previous_pain_score: 0, expected: [] }
+  - { id: h-081, message: "Gestern beim Spazieren plötzlich Engegefühl im Brustkorb und ich bekam schlecht Luft, musste mich auf ne Bank setzen", expected: [chest_pain, breathlessness] }
+  - { id: h-082, message: "Pulsuhr zeigt 130 beim Radeln, bin leicht am schnaufen aber kann noch reden, so wie Sie gesagt haben", expected: [] }
+  - { id: h-083, message: "Ich kann meinen Fuß seit heute Mittag nicht mehr anheben, der schleift beim Gehen", expected: [neurological] }
+  - { id: h-084, message: "Bisschen Fieber gehabt? Nee, hatte 37,4 abends, ist ja kein Fieber", expected: [] }
+  - { id: h-085, message: "sorry for typos, typing with one hand bc my left arm went numb out of nowhere an hour ago", expected: [neurological] }
+  - { id: h-086, message: "Scar is healing nicely, a bit pink still but flat, no discharge", expected: [] }
+  - { id: h-087, message: "I fell asleep during the cool-down stretches haha", expected: [] }
+  - { id: h-088, message: "Stürze? Nicht seit der Reha. Davor 3x, deswegen ja die Sturzprophylaxe", expected: [] }
+  - { id: h-089, message: "Hab heut ziemlich gezittert und geschwitzt, Fieber 38,9, und die Narbe pocht", pain_score: 6, previous_pain_score: 3, expected: [wound_or_fever, pain_jump] }
+  - { id: h-090, message: "Meine Tochter schreibt für mich: Papa ist heute Morgen aus dem Bett gefallen und seitdem hängt sein rechter Mundwinkel, er spricht komisch", expected: [fall, neurological] }
+  - { id: h-091, message: "Seit der Diagnose hab ich viel geweint, aber Gedanken ans Sterben hab ich keine. Die Gruppe tut mir gut", expected: [] }
+  - { id: h-092, message: "Hab im Internet gelesen dass man nach Knie-OP Fieber kriegen kann, hab ich zum Glück nicht", expected: [] }
+  - { id: h-093, message: "Atme schwer beim Treppensteigen wie immer, aber Knie heute viel schlimmer", pain_score: 7, previous_pain_score: 3, expected: [pain_jump] }
+  - { id: h-094, message: "aufm Weg zum Bus bin ich gestolpert aber nicht hingefallen, hab mich am Zaun gefangen. Danach normal weiter", expected: [] }
+  - { id: h-095, message: "Hab Hustn und bissl Halsweh, kein Fieber, Luft krieg ich normal", expected: [] }
+  - { id: h-096, message: "wollte nur sagen dass ich heute nicht kann, mein auto ist kaputt. übungen mach ich zuhause. ach und der rücken ist besser", pain_score: 2, previous_pain_score: 4, expected: [] }

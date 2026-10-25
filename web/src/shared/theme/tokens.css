@@ -1,0 +1,90 @@
+/* Design tokens. Every colour, size, space and duration in the console comes from here. */
+:root {
+  /* palette: cool clinical paper, slate ink, one therapy blue-green, two alarm colours */
+  --paper: #f3f6f5;
+  --surface: #ffffff;
+  --surface-sunk: #e9efed;
+  --ink: #16232b;
+  --ink-muted: #4f5e68;
+  --ink-faint: #6f7d86;
+  --rule: #d9e1df;
+  --accent: #0f6e7a;
+  --accent-ink: #0b5560;
+  --accent-wash: #e1f0f1;
+  --emergency: #b42318;
+  --emergency-wash: #fbe9e7;
+  --urgent: #9a5300;
+  --urgent-wash: #fbf0df;
+  --ok: #2f7d4f;
+  --ok-wash: #e4f2e9;
+  --unit-done: var(--accent);
+  --unit-todo: #d4dcda;
+  --window-ideal: #cfe6e8;
+  --window-late: #f1e3c9;
+  --focus: #0f6e7a;
+
+  /* type: one family, Atkinson Hyperlegible, made for low-vision readers */
+  --font: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.625rem;
+  --text-display: 2.25rem;
+  --leading-tight: 1.2;
+  --leading: 1.5;
+  --weight-regular: 400;
+  --weight-bold: 700;
+  --weight-medium: 700;
+  --weight-semibold: 700;
+
+  /* space (4px base) and shape */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-pill: 999px;
+  --hairline: 1px;
+  --rule-weight: 3px;
+  --touch: 44px;
+  --unit-size: 10px;
+  --unit-gap: 3px;
+  --measure: 68ch;
+  --bar-h: 64px;
+  --content-max: 1200px;
+  --danger: var(--emergency);
+  --danger-soft: var(--emergency-wash);
+  --dur-shimmer: 1.4s;
+  --skeleton-short: 60%;
+  --shadow-raised: 0 1px 2px rgb(22 35 43 / 8%), 0 4px 16px rgb(22 35 43 / 6%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0f171b;
+    --surface: #152127;
+    --surface-sunk: #1b2a31;
+    --ink: #e7eef0;
+    --ink-muted: #a9b8bf;
+    --ink-faint: #8597a0;
+    --rule: #2a3a42;
+    --accent: #4fb3bf;
+    --accent-ink: #7fcbd4;
+    --accent-wash: #173a40;
+    --emergency: #f2786d;
+    --emergency-wash: #3b1916;
+    --urgent: #e6a552;
+    --urgent-wash: #3a2a14;
+    --ok: #6cc28f;
+    --ok-wash: #173326;
+    --unit-todo: #2c3d45;
+    --window-ideal: #1d3b40;
+    --window-late: #3a3020;
+    --focus: #7fcbd4;
+  }
+}
