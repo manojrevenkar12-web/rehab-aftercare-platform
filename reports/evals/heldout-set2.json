@@ -1,0 +1,451 @@
+{
+  "label": "heldout-set2",
+  "set": "heldout/set2",
+  "recorded_at": "2026-10-25T13:39:58Z",
+  "git": "6c6195a",
+  "results": {
+    "red_flags": {
+      "cases": 125,
+      "emergency_recall": 0.4483,
+      "urgent_recall": 0.6757,
+      "by_severity": {
+        "emergency": {
+          "expected": 29,
+          "found": 13,
+          "recall": 0.4483
+        },
+        "urgent": {
+          "expected": 37,
+          "found": 25,
+          "recall": 0.6757
+        }
+      },
+      "false_escalation_rate": 0.1429,
+      "wrong": [
+        {
+          "id": "s2-001",
+          "expected": [
+            "fall"
+          ],
+          "found": [],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-004",
+          "expected": [
+            "fall"
+          ],
+          "found": [],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-007",
+          "expected": [
+            "breathlessness"
+          ],
+          "found": [],
+          "missed": [
+            "breathlessness"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-022",
+          "expected": [
+            "breathlessness"
+          ],
+          "found": [],
+          "missed": [
+            "breathlessness"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-023",
+          "expected": [
+            "fall"
+          ],
+          "found": [],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-024",
+          "expected": [
+            "chest_pain"
+          ],
+          "found": [],
+          "missed": [
+            "chest_pain"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-031",
+          "expected": [],
+          "found": [
+            "chest_pain"
+          ],
+          "missed": [],
+          "extra": [
+            "chest_pain"
+          ]
+        },
+        {
+          "id": "s2-033",
+          "expected": [],
+          "found": [
+            "neurological"
+          ],
+          "missed": [],
+          "extra": [
+            "neurological"
+          ]
+        },
+        {
+          "id": "s2-035",
+          "expected": [
+            "neurological"
+          ],
+          "found": [],
+          "missed": [
+            "neurological"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-036",
+          "expected": [
+            "wound_or_fever"
+          ],
+          "found": [],
+          "missed": [
+            "wound_or_fever"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-038",
+          "expected": [
+            "chest_pain"
+          ],
+          "found": [],
+          "missed": [
+            "chest_pain"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-039",
+          "expected": [
+            "neurological"
+          ],
+          "found": [],
+          "missed": [
+            "neurological"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-040",
+          "expected": [
+            "fall"
+          ],
+          "found": [],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-046",
+          "expected": [],
+          "found": [
+            "breathlessness"
+          ],
+          "missed": [],
+          "extra": [
+            "breathlessness"
+          ]
+        },
+        {
+          "id": "s2-050",
+          "expected": [
+            "self_harm"
+          ],
+          "found": [],
+          "missed": [
+            "self_harm"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-054",
+          "expected": [],
+          "found": [
+            "wound_or_fever"
+          ],
+          "missed": [],
+          "extra": [
+            "wound_or_fever"
+          ]
+        },
+        {
+          "id": "s2-057",
+          "expected": [
+            "fall"
+          ],
+          "found": [],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-060",
+          "expected": [
+            "fall"
+          ],
+          "found": [],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-062",
+          "expected": [],
+          "found": [
+            "fall"
+          ],
+          "missed": [],
+          "extra": [
+            "fall"
+          ]
+        },
+        {
+          "id": "s2-065",
+          "expected": [
+            "self_harm"
+          ],
+          "found": [],
+          "missed": [
+            "self_harm"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-071",
+          "expected": [
+            "fall"
+          ],
+          "found": [],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-081",
+          "expected": [
+            "fall",
+            "neurological"
+          ],
+          "found": [
+            "neurological"
+          ],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-084",
+          "expected": [
+            "breathlessness"
+          ],
+          "found": [],
+          "missed": [
+            "breathlessness"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-086",
+          "expected": [],
+          "found": [
+            "wound_or_fever"
+          ],
+          "missed": [],
+          "extra": [
+            "wound_or_fever"
+          ]
+        },
+        {
+          "id": "s2-087",
+          "expected": [
+            "wound_or_fever"
+          ],
+          "found": [],
+          "missed": [
+            "wound_or_fever"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-088",
+          "expected": [],
+          "found": [
+            "wound_or_fever"
+          ],
+          "missed": [],
+          "extra": [
+            "wound_or_fever"
+          ]
+        },
+        {
+          "id": "s2-089",
+          "expected": [],
+          "found": [
+            "wound_or_fever"
+          ],
+          "missed": [],
+          "extra": [
+            "wound_or_fever"
+          ]
+        },
+        {
+          "id": "s2-093",
+          "expected": [
+            "self_harm"
+          ],
+          "found": [],
+          "missed": [
+            "self_harm"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-096",
+          "expected": [
+            "fall"
+          ],
+          "found": [],
+          "missed": [
+            "fall"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-099",
+          "expected": [
+            "wound_or_fever"
+          ],
+          "found": [],
+          "missed": [
+            "wound_or_fever"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-101",
+          "expected": [
+            "breathlessness"
+          ],
+          "found": [],
+          "missed": [
+            "breathlessness"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-102",
+          "expected": [
+            "neurological"
+          ],
+          "found": [],
+          "missed": [
+            "neurological"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-109",
+          "expected": [
+            "breathlessness"
+          ],
+          "found": [],
+          "missed": [
+            "breathlessness"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-111",
+          "expected": [
+            "chest_pain"
+          ],
+          "found": [],
+          "missed": [
+            "chest_pain"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-115",
+          "expected": [
+            "self_harm"
+          ],
+          "found": [],
+          "missed": [
+            "self_harm"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-121",
+          "expected": [
+            "neurological"
+          ],
+          "found": [],
+          "missed": [
+            "neurological"
+          ],
+          "extra": []
+        },
+        {
+          "id": "s2-125",
+          "expected": [],
+          "found": [
+            "wound_or_fever"
+          ],
+          "missed": [],
+          "extra": [
+            "wound_or_fever"
+          ]
+        }
+      ]
+    },
+    "pseudonymization": {
+      "cases": 31,
+      "mentions": 60,
+      "leak_rate": 0.0167,
+      "leaked": [
+        {
+          "id": "q2-020",
+          "mention": "null drei null zwei drei eins zwei fünf sechs null vier"
+        }
+      ],
+      "clinical_words_lost": 0,
+      "lost": []
+    }
+  }
+}
