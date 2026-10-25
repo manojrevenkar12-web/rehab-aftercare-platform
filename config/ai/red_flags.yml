@@ -1,62 +1,187 @@
 # Red flags in a patient's check-in. They are found by these rules, not by a model, and a red flag
 # always reaches a person: the check-in is escalated and any drafted reply tells the patient to
 # get medical help. Patterns are case-insensitive regular expressions over the patient's own
-# words (German and English). A match preceded within `negation_window` words by a negation
-# ("keine Atemnot", "no chest pain") does not count.
+# words (German, some dialect, English). How a hit is negated, denied or set aside is described
+# in app/domain/ai/red_flags.rb.
+#
+# The rules prioritise; they do not replace reading. Every check-in is read by a therapist within
+# the SLA in config/aftercare/programmes.yml, flagged or not (see docs/adr/0004).
 negation_window: 3
-negations: [kein, keine, keinen, keiner, keinem, nicht, nie, ohne, "no", "not", "never", "without", "nor"]
+# shorthands used in the patterns below: {s} is a gap between words that stays inside the clause,
+# {w} a word and the gap after it, {past_year} any year before the current one
+macros:
+  s: '[^\w.!?;,\n]+'
+  w: '(?:[[:alpha:]]+[^\w.!?;,\n]+)'
+negations: [kein, keine, keinen, keiner, keinem, keins, nicht, nie, ohne, "no", "not", "never", "without", "nor", "nö"]
+
+# words right after a hit that deny it, ending the clause: "Brustschmerzen? Nein", "Fieber hatte
+# ich keins", "Atemnot: zum Glück nicht", "chest pain - none"
+# "Bisschen Fieber gehabt? Nee": a hit, a word or two, a question mark, a denial
+denial_question: '\A(\s*[[:alpha:]]+){0,2}\s*\?+\s*(nein|nee|nö|no|nope|kein\w*|nicht|negativ)\b'
+denial_after: '\A\W*(?:[[:alpha:]]+\W+){0,3}?(nein|nee|nö|no|none|nope|kein(e|s|en)?|nicht|negativ|not\s+at\s+all)(\s+(mehr|gehabt|bemerkt|gesehen|gemerkt|any\s?more|really))?\W*\z'
 
 flags:
   chest_pain:
     severity: emergency
     patterns:
       - 'brust\s*schmerz\w*'
-      - 'schmerz\w*\s+(in|an)\s+der\s+brust'
-      - 'druck\w*\s+(auf|in)\s+der\s+brust'
+      # chest word and a symptom word close together, either order; the thoracic spine
+      # (Brustwirbel) and breaststroke are not the chest
+      - '\b(brust|bruscht|br(u|ü)st)(?!wirbel|schwimm|bein|warze|krebs)\w*{s}{w}{0,3}?(schmerz|druck|dr(u|ü)ck|eng|zieh|stech|stich|sticht|brenn|weh|tut\s+weh|beklemm)'
+      - '(schmerz|druck|dr(u|ü)ck|enge\b|engegef(ü|ue)hl|zieh|stech|stich|brenn|beklemm)\w*{s}{w}{0,4}?(brust|bruscht|herz)(?!wirbel|schwimm)'
       - 'engegef(ü|ue)hl\w*'
-      - 'chest\s+(pain|pressure|tightness)'
-      - 'pain\s+in\s+(my\s+)?chest'
+      - 'herz\s*(schmerz|stich|stechen|druck)\w*'
+      - '\bchest{s}{w}{0,3}?(pain|pressure|tight|hurt|heavy|ach|squeez|crush)\w*'
+      - '(pain|pressure|tightness|ache|squeezing|heaviness){s}{w}{0,2}?(in|on|across)\s+(my\s+|the\s+)?chest'
   breathlessness:
     severity: emergency
     patterns:
       - 'atemnot'
-      - 'kurzatmig\w*'
-      - 'keine\s+luft\s+(mehr\s+)?bekomm\w*'
-      - 'bekomm\w*\s+([[:alpha:]]+\s+){0,4}keine\s+luft'
       - 'luftnot'
-      - "(short(ness)? of breath|can'?t breathe|cannot breathe|breathless)"
+      - 'kurzatmig\w*'
+      - '\b(kaum|keine|schlecht|wenig|schwer)\s+(mehr\s+)?luft\b'
+      - 'luft\s+(bleibt\s+)?weg'
+      - 'bekomm\w*\s+([[:alpha:]]+\s+){0,4}(keine|kaum|schlecht|wenig)\s+luft'
+      - 'krieg\w*\s+([[:alpha:]]+\s+){0,4}(keine|kaum|schlecht|wenig)\s+luft'
+      - 'nach\s+luft\s+(ge)?schnapp\w*'
+      - '(schwer|schlecht)\s+atmen'
+      - 'atme\w*\s+(ganz\s+)?(schwer|schlecht)'
+      - 'atem\w*\s*(probleme|beschwerden)'
+      - "(short(ness)? of breath|breathless\\w*|gasping)"
+      - "(can'?t|cannot|couldn'?t|could not)\\s+(breathe|catch\\s+(my\\s+)?breath|get\\s+(enough\\s+)?(air|my\\s+breath))"
+      - '(hard|difficult|struggl\w*)\s+(to\s+)?breath\w*'
   neurological:
     severity: emergency
     patterns:
       - 'taubheit\w*'
-      - 'taub\b'
+      - '\btaub\b'
       - 'l(ä|ae)hmung\w*'
       - 'gel(ä|ae)hmt'
       - 'kribbeln\s+(im|in)\s+(bein|arm|gesicht)\w*'
       - 'sprach(st(ö|oe)rung|probleme)\w*'
-      - '(numb(ness)?|paraly[sz]\w*|slurred speech|face drooping)'
+      - '(mundwinkel|gesicht\w*|auge\w*lid){s}{w}{0,2}?(h(ä|ae)ng|schief)\w*'
+      - '(h(ä|ae)ngt|h(ä|ae)ngende?[mnrs]?|schiefe?[mnrs]?){s}{w}{0,2}?(mundwinkel|gesicht\w*|augenlid)'
+      - '\b(red|rede|spreche|sprech|sprach|sprich|redet)\w*\s+(\w+\s+){0,4}(verwaschen|undeutlich|lall\w*|komisch|wirr)'
+      - 'verwaschen\w*\s+(sprache|sprechen|reden)'
+      - '\blall(e|t|en)\b'
+      - '(w(ö|oe)rter|worte)\s+(\w+\s+){0,3}(nicht\s+(mehr\s+)?(raus|finden|gefunden)|weg|durcheinander)'
+      - '\b(arm|bein|hand|fu(ß|ss)|gesicht)\w*{s}{w}{0,4}?(schlapp|kraftlos|gef(ü|ue)hllos|wie\s+tot)'
+      - '\b(arm|bein|hand|fu(ß|ss))\w*\W+(?:[[:alpha:]]+\W+){0,4}?nicht\s+(mehr\s+)?(an)?(heben|bewegen|halten)'
+      - "(numb(ness)?|paraly[sz]\\w*|slurred|slurring|droop\\w*)"
+      - "(couldn'?t|could not|can'?t|cannot)\\s+(get|find)\\s+(my\\s+|the\\s+)?words"
+      - '\b(arm|leg|hand|face|foot){s}{w}{0,2}?(went|is|was|feels|felt|gone|going)\s+(\w+\s+)?(numb|weak|dead|limp|floppy)'
+      - '(sudden(ly)?\s+)weak(ness)?\s+in\s+(my\s+)?(arm|leg|hand|face)'
   fall:
     severity: urgent
     patterns:
       - 'gest(ü|ue)rzt'
-      - 'sturz'
-      - 'hingefallen'
-      - '\b(i\s+)?(fell|have\s+fallen|had\s+a\s+fall)\b'
+      - '\bsturz\b'
+      - '\bst(ü|ue)rz(t|te)\b'
+      - 'hin(ge)?fall\w*'
+      - 'hin(ge)?knall\w*'
+      - 'hingeflogen|hingeschlagen'
+      - '\b(auf|aus|vom|von)\s+(\w+\s+){0,3}(ge|hin|runter|raus)?gefallen\b'
+      - 'umgefallen'
+      # slipping or tripping is a fall only when the patient went down: "gestolpert, aber gefangen" is not
+      - '(ausgerutscht|gestolpert|slipped|tripped)\b[^.!?]{0,60}?\b(boden|hintern|knie|po|floor|ground|bum|landed|gelandet)\b'
+      - '\bg(e)?foi?n\b|\bgfalle\b'
+      - '(saß|sass|lag|landete|gelandet)\w*\s+(\w+\s+){0,3}(auf\s+(dem|den|m|n)|am)\s+(boden|hintern|po|knien?)'
+      - '\baufn?\s+(hintern|boden|po|arsch)\b'
+      - '\b(fell|(have|had|i.?ve)\s+fallen|falling\s+down|had\s+a\s+fall|took\s+a\s+(fall|tumble))\b(?!\s+asleep)'
+      - '(knock\w*|knocked)\s+me\s+(over|down|off)'
+      - 'ended\s+up\s+on\s+the\s+(floor|ground)'
   wound_or_fever:
     severity: urgent
     patterns:
-      - 'fieber'
-      - '(wunde|narbe)\b[^.!?]{0,40}?\b(rot\b|ger(ö|oe)tet|eitert|n(ä|ae)sst|geschwollen)'
-      - '(ger(ö|oe)tet|eitert|n(ä|ae)sst)\w*\s+(die\s+)?(wunde|narbe)'
-      - '(fever|wound\s+\w*\s*(red|swollen|oozing|infected)|pus)'
+      - 'fieb(er|rig)(?!frei)\w*'
+      - 'sch(ü|ue)ttel\s*frost'
+      - '\b(fever\w*|feverish|chills)\b'
+      # wound or scar and a sign of infection in the same stretch, with no negation in between
+      - '(wunde|narbe|naht)\w*\b(?:(?!\b(?:nicht|kein\w*|nie|ohne|not|no)\b)[^.!?]){0,40}?\b(rot\b|r(ö|oe)ter|ger(ö|oe)tet|eiter\w*|eitrig|n(ä|ae)ss\w*|geschwollen|dick|warm|hei(ß|ss)|entz(ü|ue)nd\w*|offen|aufgegangen)'
+      - '(ger(ö|oe)tet|eitert|eitrig|n(ä|ae)sst|entz(ü|ue)ndet|geschwollen)\w*\s+(\w+\s+){0,2}(wunde|narbe|naht)'
+      - '\b(wound|scar|incision|stitches)\b(?:(?!\b(?:not|no|isn.?t)\b)[^.!?]){0,40}?\b(red|swollen|oozing|weeping|infected|hot|pus|opened)'
+      - '\bpus\b'
   self_harm:
     severity: emergency
     patterns:
-      - 'suizid\w*'
-      - 'umbringen'
-      - 'nicht\s+mehr\s+leben'
+      - 'suizid\w*|selbstmord\w*'
+      - '\bmich\s+(\w+\s+){0,2}umbringen'
+      - 'umbring\w*\s+mich'
+      - 'nicht\s+mehr\s+(leben|da\s+sein|aufwach\w*)'
+      - '(will|möchte|moechte|würde\s+lieber)\s+(\w+\s+){0,2}(sterben|tot\s+sein)'
+      - 'lieber\s+tot'
+      - '(mit\s+(allem|mir|dem\s+leben)\s+schluss\s+machen|schluss\s+machen\s+mit\s+(allem|mir|dem\s+leben))'
       - 'mir\s+(et)?was\s+an(tun)?'
-      - '(suicid\w*|kill\s+myself|end\s+my\s+life|hurt\s+myself)'
+      - '(alle|die\s+ganzen|meine)\s+tabletten\s+(\w+\s+){0,3}(nehm|schluck)\w*'
+      - '(alles|leben|das\s+ganze)\s+(\w+\s+){0,2}keinen\s+sinn(\s+mehr)?'
+      - "(suicid\\w*|kill\\s+myself|end\\s+(my\\s+life|it\\s+all)|hurt\\s+myself|harm\\s+myself|want\\s+to\\s+die|better\\s+off\\s+dead)"
+      - "(no|don.?t\\s+see\\s+the|any|what.?s\\s+the)\\s+point\\s+(in\\s+|of\\s+)?(going\\s+on|living|carrying\\s+on|being\\s+alive)"
+      - "(not|never)\\s+wake\\s+up"
+      - "(take|swallow)\\s+(all|the\\s+whole)\\s+(my\\s+|of\\s+my\\s+)?(pills|tablets)"
+
+# Context in the same sentence that sets a hit aside. `flags` limits a context to some flags;
+# `before_only` means the context words must come before the hit; `unless` keeps the hit when the
+# sentence also says it is happening now or again.
+context:
+  someone_else:
+    before_only: true
+    patterns:
+      - '\b(mein(e|em|en|er)?|unser(e|em|en)?)\s+(mann|frau|partner\w*|sohn|tochter|mutter|mama|vater|papa|nachbar\w*|enkel\w*|oma|opa|schwester|bruder|freund\w*|kolleg\w*|schwieger\w*|hund|katze)\b'
+      - '\bmy\s+(husband|wife|partner|son|daughter|mother|mum|mom|father|dad|neighbou?r|grand\w+|sister|brother|friend|colleague|dog|cat)\b'
+    # a first-person word between the other person and the hit makes it the patient's own
+    first_person: '\b(ich|mir|mich|mein\w*\s+(arm|bein|hand|fu(ß|ss)|gesicht|brust|knie|wunde|narbe)|i|me|my)\b'
+  past:
+    patterns:
+      - '(?<![.\/\d]){past_year}\b'
+      - '\b(fr(ü|ue)her|damals|davor|ehemals|als\s+kind)\b'
+      - '\bvor\s+(\w+\s+)?(jahren|monaten|der\s+(op|operation|reha))\b'
+      - '\b(letztes|vorletztes)\s+jahr\b'
+      - '\b(years?|months)\s+ago\b|\bas\s+a\s+(child|kid)\b|\bbefore\s+(the\s+|my\s+)?(surgery|operation|rehab)\b|\blast\s+year\b'
+      - '\bin\s+der\s+vorgeschichte\b|\bhistory\s+of\b'
+    unless:
+      - '\b((?<!nie\s)(?<!nicht\s)wieder|erneut|jetzt|heute|gestern|gerade|seit\s+(heute|gestern|stunden|tagen)|aktuell|noch\s+immer|immer\s+noch)\b'
+      - '\b(again|now|today|yesterday|this\s+(morning|evening)|still|since\s+(this|yesterday|last\s+night))\b'
+  fear:
+    before_only: true
+    across_and: true
+    own_clause:
+      - '\b(habe|hab|hatte|bin|war|ist|sind|seit|jetzt|heute|gerade|have|has|had|am|is|was|now|today)\b'
+    patterns:
+      - '\bangst\b[\s,]+(\w+[\s,]+){0,2}(davor|vor|dass|zu)\b'
+      - '\b(sorge|sorgen)\b,?\s+(\w+\s+)?(dass|vor)\b'
+      - '\b(bef(ü|ue)rchte|f(ü|ue)rchte)\b'
+      - '\b(afraid|scared|worried|frightened|terrified|nervous)[\s,]+(of|that|about|to|i)\b'
+      - '\bfear\s+of\b'
+      - '\bhoffentlich\s+nicht\b|\bhope\s+(i|it)\s+(don.?t|doesn.?t|won.?t)\b'
+  resolved:
+    flags: [wound_or_fever]
+    patterns:
+      - '\bfieberfrei\b'
+      - '\b(ist|sind|war)\s+(wieder\s+)?(weg|vorbei|abgeklungen|verschwunden)\b'
+      - '\b(gone|over|cleared\s+up|resolved)\b'
+  hearsay:
+    before_only: true
+    patterns:
+      - '\b(gelesen|geh(ö|oe)rt|im\s+internet|laut\s+(arzt|ärztin|doktor|flyer|brosch(ü|ue)re)|read|heard)\b[^.!?]{0,40}\b(dass|das|that|man|you|people)\b'
+  usual_exertion:
+    flags: [breathlessness]
+    patterns:
+      - '(?<!nicht\s)\b(wie\s+(immer|gewohnt|sonst|(ü|ue)blich)|ganz\s+normal|normal\s+(bei|beim|nach)|as\s+(usual|always|expected)|like\s+always|normal\s+for\s+me)\b'
+    unless:
+      - '\b(schlimmer|st(ä|ae)rker|mehr\s+als|anders|neu|worse|more\s+than|than\s+usual|new)\b'
+  near_miss:
+    flags: [fall]
+    before_only: true
+    patterns:
+      - '\b(fast|beinahe|beinah|um\s+ein\s+haar|knapp\s+nicht)\b'
+      - '\b(almost|nearly)\b'
+
+# A temperature reading in the message: decimal readings between 35 and 42 count on their own,
+# whole numbers only next to a word below. A reading at or above `fever_at` is a fever; a
+# message whose only readings are below it is not, even if it says "Fieber gemessen".
+temperature:
+  fever_at: 38.0
+  context: 'fieber|temperatur|\btemp\b|gemessen|thermometer|fever|measured|°|grad'
 
 pain:
   # a pain score this high, or this much above the previous check-in, is a flag on its own

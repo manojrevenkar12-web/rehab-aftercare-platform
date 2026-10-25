@@ -12,7 +12,7 @@ module Ai
     Result = Data.define(:text, :mapping)
 
     EMAIL = /[[:alnum:]._%+-]+@[[:alnum:].-]+\.[[:alpha:]]{2,}/
-    PHONE = /(?<!\w)(?:\+49|0049|0)[\s\/-]?(?:\(?\d{2,5}\)?[\s\/-]?)\d{3,}(?:[\s-]?\d{2,})*/
+    PHONE = /(?<!\w)(?:\+49|0049|0)[\s\/.-]?(?:\(?\d{2,5}\)?[\s\/.-]?)\d{3,}(?:[\s.-]?\d{2,})*/
     # Rentenversicherungsnummer: area (2 digits), birth date (6), initial (letter), serial (2), check (1)
     RVNR = /\b\d{2}\s?\d{6}\s?[A-Z]\s?\d{2}\s?\d\b/
     MIN_NAME_PART = 3
@@ -88,7 +88,10 @@ module Ai
     def needles
       out = {}
       name_parts.each_with_index { |p, i| out["name_part_#{i}"] = p }
-      out["birth_date"] = @identity[:birth_date].strftime("%d.%m.%Y") if @identity[:birth_date]
+      if (b = @identity[:birth_date])
+        out["birth_date"] = b.strftime("%d.%m.%Y")
+        out["birth_date_short"] = b.strftime("%-d.%-m.%Y")
+      end
       out["insurance_number"] = @identity[:insurance_number] if @identity[:insurance_number]
       out["email"] = @identity[:email] if @identity[:email]
       out["phone"] = @identity[:phone].gsub(/\D/, "") if @identity[:phone]
@@ -96,11 +99,16 @@ module Ai
     end
 
     def normalise(value)
-      value.to_s.downcase.gsub(/[\s.\/-]/, "")
+      value.to_s.downcase.gsub(/[\s.\/()-]/, "").gsub("ä", "ae").gsub("ö", "oe").gsub("ü", "ue").gsub("ß", "ss")
     end
 
+    # "Wöhrle" is also written "Woehrle" or "Wohrle", and "Strauß" "Strauss"; either way round.
+    SPELLINGS = { "ä" => "(?:ä|ae|a)", "ö" => "(?:ö|oe|o)", "ü" => "(?:ü|ue|u)", "ß" => "(?:ß|ss)",
+                  "ae" => "(?:ae|ä)", "oe" => "(?:oe|ö)", "ue" => "(?:ue|ü)", "ss" => "(?:ss|ß)" }.freeze
+
     def word(value)
-      Regexp.new("(?<![[:alpha:]])#{Regexp.escape(value)}(?:s)?(?![[:alpha:]])", Regexp::IGNORECASE)
+      body = value.downcase.scan(/ae|oe|ue|ss|./m).map { |c| SPELLINGS[c] || Regexp.escape(c) }.join
+      Regexp.new("(?<![[:alpha:]])#{body}(?:s|'s|’s)?(?![[:alpha:]])", Regexp::IGNORECASE)
     end
 
     def spaced(value)
@@ -109,23 +117,29 @@ module Ai
 
     def digits_pattern(phone)
       digits = phone.gsub(/\D/, "").sub(/\A(?:49|0049)/, "").sub(/\A0/, "")
-      Regexp.new("(?:\\+49|0049|0)?[\\s/()-]*" + digits.chars.join("[\\s/()-]*"))
+      Regexp.new("(?:\\+49|0049|0)?[\\s/().-]*" + digits.chars.join("[\\s/().-]*"))
     end
 
+    # 7.2.1959, 07.02.59, 7-2-1959, 7/2/59, 1959-02-07, 7. Februar 1959, 7. Feb. '59,
+    # February 7th, 1959
     def date_patterns(date)
-      d, m, y = date.day, date.month, date.year
+      d, m, yy = date.day, date.month, format("%02d", date.year % 100)
+      year = "'?(?:#{date.year}|#{yy})"
+      day = "0?#{d}"
+      month = "(?:#{month_names(m).map { |n| Regexp.escape(n) }.join('|')})"
       [
-        /\b0?#{d}\.\s?0?#{m}\.\s?(?:#{y}|#{y % 100})\b/,
-        /\b#{date.iso8601}\b/,
-        /\b0?#{d}\/0?#{m}\/(?:#{y}|#{y % 100})\b/,
-        Regexp.new("\\b#{d}\\.?\\s+#{Regexp.union(month_names(m))}\\s+#{y}\\b", Regexp::IGNORECASE)
+        Regexp.new("(?<!\\d)#{day}\\s?([./-])\\s?0?#{m}\\s?\\1\\s?#{year}(?!\\d)"),
+        Regexp.new("(?<!\\d)#{date.year}-0?#{m}-#{day}(?!\\d)"),
+        Regexp.new("(?<!\\d)#{day}(?:\\.|st|nd|rd|th)?\\s*(?:of\\s+)?#{month}\\.?,?\\s*#{year}(?!\\d)", Regexp::IGNORECASE),
+        Regexp.new("#{month}\\.?\\s+#{day}(?:st|nd|rd|th)?,?\\s+#{year}(?!\\d)", Regexp::IGNORECASE)
       ]
     end
 
     def month_names(m)
       de = %w[Januar Februar März April Mai Juni Juli August September Oktober November Dezember]
       en = Date::MONTHNAMES.compact
-      [ de[m - 1], en[m - 1], de[m - 1].sub("ä", "ae") ]
+      short = [ de[m - 1][0, 3], en[m - 1][0, 3], (m == 3 ? "Mrz" : nil), (m == 9 ? "Sept" : nil), (m == 2 ? "Febr" : nil) ]
+      ([ de[m - 1], en[m - 1], de[m - 1].sub("ä", "ae") ] + short).compact.uniq.sort_by { |n| -n.length }
     end
   end
 end

@@ -26,3 +26,14 @@ namespace :evals do
     puts Evals::Report.markdown(doc)
   end
 end
+
+namespace :evals do
+  desc "Run a studied held-out set as a regression set: bin/rails evals:regression[set1]"
+  task :regression, [ :set ] => :environment do |_, args|
+    set = args[:set] || abort("name the set")
+    dir = Rails.root.join("evals/heldout/#{set}")
+    abort("#{set} is still held out; record its first run with evals:heldout") unless dir.join("STATUS").exist? && dir.join("STATUS").read.strip == "regression"
+    doc = Evals::Report.write("regression-#{set}", Evals::Runner.new(dir).run, set: "heldout/#{set} (regression)")
+    puts Evals::Report.markdown(doc)
+  end
+end

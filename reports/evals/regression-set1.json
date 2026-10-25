@@ -1,0 +1,35 @@
+{
+  "label": "regression-set1",
+  "set": "heldout/set1 (regression)",
+  "recorded_at": "2026-10-25T13:32:35Z",
+  "git": "cc930c0",
+  "results": {
+    "red_flags": {
+      "cases": 96,
+      "emergency_recall": 1.0,
+      "urgent_recall": 1.0,
+      "by_severity": {
+        "emergency": {
+          "expected": 24,
+          "found": 24,
+          "recall": 1.0
+        },
+        "urgent": {
+          "expected": 28,
+          "found": 28,
+          "recall": 1.0
+        }
+      },
+      "false_escalation_rate": 0.0,
+      "wrong": []
+    },
+    "pseudonymization": {
+      "cases": 24,
+      "mentions": 48,
+      "leak_rate": 0.0,
+      "leaked": [],
+      "clinical_words_lost": 0,
+      "lost": []
+    }
+  }
+}

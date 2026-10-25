@@ -55,7 +55,8 @@ module Presenters
   end
 
   def check_in(c)
-    { id: c.id, submitted_at: c.submitted_at, pain_score: c.pain_score, message: c.message, status: c.status, red_flags: c.red_flags }
+    { id: c.id, submitted_at: c.submitted_at, pain_score: c.pain_score, message: c.message, status: c.status, red_flags: c.red_flags,
+      set_aside: c.set_aside }
   end
 
   def timeline(e, today:, viewer:)

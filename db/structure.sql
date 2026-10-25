@@ -46,8 +46,8 @@ CREATE TABLE public.ai_drafts (
     reviewed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT ai_drafts_kind_known CHECK (((kind)::text = ANY ((ARRAY['check_in_reply'::character varying, 'closing_report'::character varying, 'plan_change'::character varying])::text[]))),
-    CONSTRAINT ai_drafts_status_known CHECK (((status)::text = ANY ((ARRAY['queued'::character varying, 'ready'::character varying, 'held'::character varying, 'failed'::character varying, 'approved'::character varying, 'rejected'::character varying])::text[])))
+    CONSTRAINT ai_drafts_kind_known CHECK (((kind)::text = ANY (ARRAY[('check_in_reply'::character varying)::text, ('closing_report'::character varying)::text, ('plan_change'::character varying)::text]))),
+    CONSTRAINT ai_drafts_status_known CHECK (((status)::text = ANY (ARRAY[('queued'::character varying)::text, ('ready'::character varying)::text, ('held'::character varying)::text, ('failed'::character varying)::text, ('approved'::character varying)::text, ('rejected'::character varying)::text])))
 );
 
 
@@ -201,7 +201,8 @@ CREATE TABLE public.check_ins (
     status character varying DEFAULT 'new'::character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT check_ins_status_known CHECK (((status)::text = ANY ((ARRAY['new'::character varying, 'escalated'::character varying, 'answered'::character varying])::text[])))
+    set_aside jsonb DEFAULT '[]'::jsonb NOT NULL,
+    CONSTRAINT check_ins_status_known CHECK (((status)::text = ANY (ARRAY[('new'::character varying)::text, ('escalated'::character varying)::text, ('answered'::character varying)::text])))
 );
 
 
@@ -245,7 +246,7 @@ CREATE TABLE public.claims (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     CONSTRAINT claims_amount_not_negative CHECK ((amount_cents >= 0)),
-    CONSTRAINT claims_status_known CHECK (((status)::text = ANY ((ARRAY['draft'::character varying, 'ready'::character varying, 'submitted'::character varying, 'paid'::character varying, 'rejected'::character varying, 'needs_review'::character varying])::text[])))
+    CONSTRAINT claims_status_known CHECK (((status)::text = ANY (ARRAY[('draft'::character varying)::text, ('ready'::character varying)::text, ('submitted'::character varying)::text, ('paid'::character varying)::text, ('rejected'::character varying)::text, ('needs_review'::character varying)::text])))
 );
 
 
@@ -354,7 +355,7 @@ CREATE TABLE public.enrolments (
     lock_version integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT enrolments_status_known CHECK (((status)::text = ANY ((ARRAY['referred'::character varying, 'approved'::character varying, 'active'::character varying, 'completed'::character varying, 'ended_early'::character varying, 'expired'::character varying])::text[]))),
+    CONSTRAINT enrolments_status_known CHECK (((status)::text = ANY (ARRAY[('referred'::character varying)::text, ('approved'::character varying)::text, ('active'::character varying)::text, ('completed'::character varying)::text, ('ended_early'::character varying)::text, ('expired'::character varying)::text]))),
     CONSTRAINT enrolments_units_positive CHECK ((units_required > 0))
 );
 
@@ -959,8 +960,8 @@ CREATE TABLE public.training_units (
     updated_at timestamp(6) without time zone NOT NULL,
     CONSTRAINT training_units_duration_positive CHECK ((duration_minutes > 0)),
     CONSTRAINT training_units_effort_scale CHECK (((effort IS NULL) OR ((effort >= 0) AND (effort <= 10)))),
-    CONSTRAINT training_units_pain_scale CHECK ((((pain_before >= 0) AND (pain_before <= 10)) AND ((pain_after >= 0) AND (pain_after <= 10)))),
-    CONSTRAINT training_units_source_known CHECK (((source)::text = ANY ((ARRAY['patient_app'::character varying, 'therapist'::character varying])::text[])))
+    CONSTRAINT training_units_pain_scale CHECK (((pain_before >= 0) AND (pain_before <= 10) AND ((pain_after >= 0) AND (pain_after <= 10)))),
+    CONSTRAINT training_units_source_known CHECK (((source)::text = ANY (ARRAY[('patient_app'::character varying)::text, ('therapist'::character varying)::text])))
 );
 
 
@@ -996,7 +997,7 @@ CREATE TABLE public.users (
     password_digest character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT users_role_known CHECK (((role)::text = ANY ((ARRAY['clinic_admin'::character varying, 'physician'::character varying, 'therapist'::character varying, 'billing'::character varying, 'patient'::character varying])::text[])))
+    CONSTRAINT users_role_known CHECK (((role)::text = ANY (ARRAY[('clinic_admin'::character varying)::text, ('physician'::character varying)::text, ('therapist'::character varying)::text, ('billing'::character varying)::text, ('patient'::character varying)::text])))
 );
 
 
@@ -2148,6 +2149,7 @@ ALTER TABLE ONLY public.patients
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261025000003'),
 ('20261025000002'),
 ('20261025000001');
 

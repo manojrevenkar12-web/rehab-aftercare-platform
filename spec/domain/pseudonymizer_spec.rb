@@ -31,4 +31,11 @@ RSpec.describe Ai::Pseudonymizer do
     q = described_class.new(full_name: "Li Wu", birth_date: Date.new(1990, 1, 2))
     expect(q.call("Links tut es weh, wurde besser").text).to eq("Links tut es weh, wurde besser")
   end
+
+  it "matches a name however its umlauts are written, and dates and phones with any separator" do
+    q = described_class.new(full_name: "Jürgen Strauß", birth_date: Date.new(1957, 9, 3), phone: "0221 4455667")
+    out = q.call("Gruß von Juergen Strauss, geb. 3-9-57 bzw. 3. Sept. '57, Tel. 0221.445.56.67").text
+    expect(out).not_to include("Juergen", "Strauss", "3-9-57", "57", "445")
+    expect(q.leaks('{"m":"juergen"}')).to eq([ "name_part_0" ])
+  end
 end
