@@ -1,0 +1,141 @@
+.ruler {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+}
+
+.count {
+  color: var(--ink-muted);
+}
+
+.count strong {
+  color: var(--ink);
+  font-size: var(--text-lg);
+}
+
+.track {
+  position: relative;
+  height: var(--ruler-h);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunk);
+  overflow: visible;
+}
+
+.bandIdeal,
+.bandLate {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.bandIdeal {
+  background: var(--window-ideal);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.bandLate {
+  background: var(--window-late);
+}
+
+.unit,
+.unitShort {
+  position: absolute;
+  top: 22%;
+  bottom: 22%;
+  width: var(--unit-gap);
+  margin-left: calc(var(--unit-gap) / -2);
+  border-radius: var(--radius-pill);
+  transform-origin: bottom;
+}
+
+.unit {
+  background: var(--unit-done);
+}
+
+.unitShort {
+  background: transparent;
+  outline: var(--hairline) solid var(--ink-faint);
+}
+
+.today {
+  position: absolute;
+  top: calc(var(--space-2) * -1);
+  bottom: calc(var(--space-2) * -1);
+  width: var(--today-w);
+  margin-left: calc(var(--today-w) / -2);
+  background: var(--ink);
+}
+
+.todayLabel {
+  position: absolute;
+  top: var(--space-2);
+  left: calc(100% + var(--space-1));
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.marks {
+  position: relative;
+  height: calc(var(--text-sm) * var(--leading) * 4 + var(--space-2));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+.mark {
+  position: absolute;
+  top: 0;
+  display: grid;
+  padding-left: var(--space-2);
+  border-left: var(--hairline) solid var(--ink-faint);
+  white-space: nowrap;
+}
+
+.mark[data-mark="latest"] {
+  top: calc(var(--text-sm) * var(--leading) * 2 + var(--space-2));
+}
+
+.mark[data-mark="finish"] {
+  transform: translateX(-100%);
+  padding: 0 var(--space-2) 0 0;
+  border-left: 0;
+  border-right: var(--hairline) solid var(--ink-faint);
+  text-align: right;
+}
+
+.markLabel {
+  color: var(--ink-muted);
+}
+
+.mark time {
+  font-weight: var(--weight-bold);
+}
+
+@media (max-width: 640px) {
+  .marks {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2) var(--space-4);
+  }
+
+  .mark,
+  .mark[data-mark="latest"],
+  .mark[data-mark="finish"] {
+    position: static;
+    transform: none;
+    padding: 0 0 0 var(--space-2);
+    border-right: 0;
+    border-left: var(--hairline) solid var(--ink-faint);
+    text-align: left;
+    left: auto !important;
+  }
+}

@@ -95,7 +95,8 @@ module Presenters
   def claim(c, detail: false)
     base = { id: c.id, number: c.number, status: c.status, amount: c.amount, currency: c.currency,
              units_billed: c.units_billed, patient: c.enrolment.patient.pseudonym, programme: c.enrolment.programme,
-             enrolment_id: c.enrolment_id, problems: c.problems, updated_at: c.updated_at }
+             enrolment_id: c.enrolment_id, problems: c.problems, updated_at: c.updated_at,
+             rate_source: c.documents.dig("invoice", "rate_source") }
     detail ? base.merge(documents: c.documents, submitted_at: c.submitted_at, settled_at: c.settled_at, rejection_reason: c.rejection_reason) : base
   end
 

@@ -1,0 +1,19 @@
+.strip {
+  display: inline-grid;
+  gap: var(--unit-gap);
+}
+
+.done,
+.todo {
+  width: var(--unit-size);
+  height: var(--unit-size);
+  border-radius: var(--radius-sm);
+}
+
+.done {
+  background: var(--unit-done);
+}
+
+.todo {
+  background: var(--unit-todo);
+}

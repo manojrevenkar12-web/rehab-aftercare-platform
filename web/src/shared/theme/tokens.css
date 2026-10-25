@@ -22,6 +22,7 @@
   --window-ideal: #cfe6e8;
   --window-late: #f1e3c9;
   --focus: #0f6e7a;
+  --on-accent: #ffffff;
 
   /* type: one family, Atkinson Hyperlegible, made for low-vision readers */
   --font: "Atkinson Hyperlegible", system-ui, sans-serif;
@@ -52,6 +53,17 @@
   --hairline: 1px;
   --rule-weight: 3px;
   --touch: 44px;
+  --tag-h: 1.6rem;
+  --rule-mark: 4px;
+  --ruler-h: 56px;
+  --ruler-unit: 12px;
+  --today-w: 2px;
+  --sidebar: 380px;
+  --panel-narrow: 28rem;
+  --col-sm: 8rem;
+  --col-md: 10rem;
+  --col-lg: 12rem;
+  --spark-h: 48px;
   --unit-size: 10px;
   --unit-gap: 3px;
   --measure: 68ch;
@@ -60,6 +72,7 @@
   --danger: var(--emergency);
   --danger-soft: var(--emergency-wash);
   --dur-shimmer: 1.4s;
+  --dur-fast: 140ms;
   --skeleton-short: 60%;
   --shadow-raised: 0 1px 2px rgb(22 35 43 / 8%), 0 4px 16px rgb(22 35 43 / 6%);
 }
@@ -86,5 +99,6 @@
     --window-ideal: #1d3b40;
     --window-late: #3a3020;
     --focus: #7fcbd4;
+    --on-accent: #0f171b;
   }
 }

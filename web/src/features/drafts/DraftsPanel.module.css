@@ -1,0 +1,22 @@
+.panel {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.title {
+  font-size: var(--text-lg);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.history summary {
+  min-height: var(--touch);
+  display: flex;
+  align-items: center;
+  color: var(--accent-ink);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}

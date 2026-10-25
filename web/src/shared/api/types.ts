@@ -46,6 +46,9 @@ export interface CaseloadRow {
   rehab_ended_on: string;
   enrolment: Enrolment | null;
   escalations: number;
+  /** check-ins nobody has answered yet, and those past the answer-within SLA */
+  unanswered: number;
+  overdue: number;
   attention: number;
 }
 
@@ -58,6 +61,18 @@ export interface RedFlag {
   code: string;
   severity: "emergency" | "urgent";
   evidence: string;
+  /** "model" when the model screen added it; rules otherwise */
+  source?: "model";
+}
+
+export type SetAsideReason = "someone_else" | "past" | "fear" | "near_miss" | "resolved" | "hearsay" | "usual_exertion";
+
+/** A rule hit the context set aside: shown, not escalated. */
+export interface SetAside {
+  code: string;
+  severity: "emergency" | "urgent";
+  evidence: string;
+  reason: SetAsideReason;
 }
 
 export interface CheckIn {
@@ -67,6 +82,8 @@ export interface CheckIn {
   message: string;
   status: "new" | "escalated" | "answered";
   red_flags: RedFlag[];
+  set_aside: SetAside[];
+  screen: { model?: string; added?: string[]; error?: string } | null;
 }
 
 export interface Unit {
@@ -144,8 +161,9 @@ export interface ClosingReport {
 }
 
 export interface Timeline {
+  today: string;
   enrolment: Enrolment;
-  patient: { id: number; pseudonym: string; name: string; indication: string };
+  patient: { id: number; pseudonym: string; name: string; indication: string; rehab_ended_on: string };
   units: Unit[];
   check_ins: CheckIn[];
   drafts: Draft[];
@@ -173,6 +191,22 @@ export interface Claim {
   enrolment_id: number;
   problems: Problem[];
   updated_at: string;
+  rate_source: string | null;
   documents?: Record<string, unknown>;
   rejection_reason?: string | null;
+}
+
+export interface AuditEvent {
+  id: number;
+  action: string;
+  actor: string | null;
+  subject: string | null;
+  data: Record<string, unknown>;
+  at: string;
+  digest: string;
+}
+
+export interface AuditLog {
+  events: AuditEvent[];
+  chain_broken_at: number | null;
 }

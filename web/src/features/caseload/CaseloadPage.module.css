@@ -1,0 +1,45 @@
+.page {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.header {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.title {
+  font-size: var(--text-display);
+  line-height: var(--leading-tight);
+}
+
+.summary {
+  max-width: var(--measure);
+  font-size: var(--text-lg);
+  color: var(--ink-muted);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.groupTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.groupCount {
+  color: var(--ink-faint);
+  font-weight: var(--weight-regular);
+}
+
+.rows {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

@@ -1,4 +1,4 @@
-import type { Caseload, Claim, Draft, DraftKind, Timeline, User } from "./types";
+import type { AuditLog, Caseload, Claim, Draft, DraftKind, Timeline, User } from "./types";
 
 export class ApiError extends Error {
   constructor(
@@ -67,4 +67,6 @@ export const api = {
   submitClaim: (id: number) => post<Claim>(`/api/v1/claims/${id}/submit`),
   markPaid: (id: number) => post<Claim>(`/api/v1/claims/${id}/paid`),
   markRejected: (id: number, reason: string) => post<Claim>(`/api/v1/claims/${id}/rejected`, { reason }),
+  decideReview: (id: number, units: number, note: string) => post<Claim>(`/api/v1/claims/${id}/review`, { units, note }),
+  audit: () => request<AuditLog>("/api/v1/audit_events"),
 };

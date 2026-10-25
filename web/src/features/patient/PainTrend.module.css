@@ -1,0 +1,67 @@
+.section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.title {
+  font-size: var(--text-lg);
+}
+
+.figure {
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.chart {
+  width: 100%;
+  height: calc(var(--spark-h) * 2);
+}
+
+.grid {
+  stroke: var(--rule);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.before,
+.after {
+  fill: none;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+
+.after {
+  stroke: var(--accent);
+}
+
+.before {
+  stroke: var(--ink-faint);
+  stroke-dasharray: 4 4;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.keyAfter::before,
+.keyBefore::before {
+  content: "";
+  display: inline-block;
+  width: var(--space-4);
+  margin-right: var(--space-2);
+  vertical-align: middle;
+  border-top: 2px solid var(--accent);
+}
+
+.keyBefore::before {
+  border-top: 2px dashed var(--ink-faint);
+}

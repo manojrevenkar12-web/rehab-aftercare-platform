@@ -1,0 +1,123 @@
+.row {
+  display: grid;
+  grid-template-columns: minmax(var(--col-lg), 1fr) auto;
+  gap: var(--space-2) var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: inset var(--rule-mark) 0 0 var(--level, transparent);
+}
+
+.row[data-status="needs_review"],
+.row[data-status="draft"] {
+  --level: var(--urgent);
+}
+
+.row[data-status="rejected"] {
+  --level: var(--emergency);
+}
+
+.row[data-status="ready"] {
+  --level: var(--accent);
+}
+
+.row[data-status="paid"] {
+  --level: var(--ok);
+}
+
+.what {
+  display: grid;
+}
+
+.number {
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lg);
+}
+
+.meta {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.amount {
+  justify-self: end;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+}
+
+.unpriced {
+  justify-self: end;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.currency {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+  font-weight: var(--weight-regular);
+}
+
+.problems,
+.actions,
+.form,
+.error {
+  grid-column: 1 / -1;
+}
+
+.problems {
+  margin: 0;
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.problems [data-severity="blocking"] {
+  color: var(--urgent);
+  font-weight: var(--weight-bold);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+  overflow: hidden;
+}
+
+.field {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.field input {
+  min-height: var(--touch);
+  padding: 0 var(--space-3);
+  border: var(--hairline) solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  font-weight: var(--weight-regular);
+}
+
+.error {
+  color: var(--emergency);
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+  }
+
+  .amount {
+    justify-self: start;
+  }
+}

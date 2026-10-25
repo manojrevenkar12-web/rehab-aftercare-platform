@@ -13,3 +13,7 @@
 node_modules/
 /web/dist
 .byebug_history
+# the console build, copied into public/ for local runs and by the Dockerfile
+/public/index.html
+/public/assets
+/public/*.svg

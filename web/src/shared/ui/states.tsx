@@ -18,12 +18,7 @@ export function Skeleton({ lines = 3, label }: { lines?: number; label: string }
 export function ErrorState({ error, onRetry, what }: { error: unknown; onRetry?: () => void; what: string }) {
   const status = error instanceof ApiError ? error.status : undefined;
   const detail = error instanceof Error ? error.message : String(error);
-  const hint =
-    status === 401
-      ? "Your session has ended. Sign in again."
-      : status === 404
-          ? "It does not exist (any more). Pick another from the list."
-          : "Try again. If it keeps failing, tell the platform team.";
+  const hint = hintFor(status);
   return (
     <div className={styles.error} role="alert">
       <p className={styles.title}>Could not load {what}</p>
@@ -36,6 +31,21 @@ export function ErrorState({ error, onRetry, what }: { error: unknown; onRetry?:
       )}
     </div>
   );
+}
+
+function hintFor(status: number | undefined): string {
+  switch (status) {
+    case 0:
+      return "The server did not answer. Check your connection, then try again.";
+    case 401:
+      return "Your session has ended. Sign in again.";
+    case 403:
+      return "Your role cannot open this. Ask a clinic administrator if you need it.";
+    case 404:
+      return "It does not exist any more. Pick another from the list.";
+    default:
+      return "Try again. If it keeps failing, tell the platform team.";
+  }
 }
 
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {

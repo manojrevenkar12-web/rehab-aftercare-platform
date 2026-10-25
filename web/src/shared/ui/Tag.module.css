@@ -1,0 +1,36 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  min-height: var(--tag-h);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  white-space: nowrap;
+}
+
+.neutral {
+  background: var(--surface-sunk);
+  color: var(--ink-muted);
+}
+
+.accent {
+  background: var(--accent-wash);
+  color: var(--accent-ink);
+}
+
+.ok {
+  background: var(--ok-wash);
+  color: var(--ok);
+}
+
+.urgent {
+  background: var(--urgent-wash);
+  color: var(--urgent);
+}
+
+.emergency {
+  background: var(--emergency-wash);
+  color: var(--emergency);
+}

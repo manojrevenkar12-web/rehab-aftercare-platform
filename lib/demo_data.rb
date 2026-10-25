@@ -20,7 +20,10 @@ module DemoData
       [ "Fatma Yilmaz", "neurology", 60, 9, %w[sit_to_stand tandem_stance], [ 4, 3 ], "Ich bin gestern im Flur gestürzt, nichts gebrochen.", 5 ],
       [ "Olaf Krüger", "cardiology", 50, 3, %w[walking_intervals], [ 3, 3 ], nil, nil ],
       [ "Maria Lange", "orthopaedics", 30, 0, [], nil, nil, nil ],
-      [ "Peter Schmidt", "orthopaedics", 100, 6, %w[pendulum wall_slides], [ 4, 3 ], "Alles gut, die Schulter wird beweglicher.", 2 ]
+      [ "Peter Schmidt", "orthopaedics", 100, 6, %w[pendulum wall_slides], [ 4, 3 ], "Alles gut, die Schulter wird beweglicher.", 2 ],
+      [ "Karl Weber", "orthopaedics", 70, 10, %w[quad_sets bridging], [ 5, 3 ],
+        "Meine Frau ist am Sonntag gestürzt, ich hab sie zum Arzt gefahren. Bei mir ist das Knie ok, Übungen gemacht.", 3 ],
+      [ "Helga Vogt", "orthopaedics", 150, 8, %w[heel_slides], [ 5, 4 ], nil, nil ]
     ]
     people.each_with_index do |(name, indication, ago, units, plan, pain, message, score), i|
       patient = Patient.find_or_initialize_by(clinic: clinic, insurance_number: format("%02d %06d %s %02d %d", 12 + i, 10_165 + i, name[0], i, i))
@@ -40,10 +43,40 @@ module DemoData
                          pain_before: [ before - (n / 5), 0 ].max, pain_after: [ after - (n / 6), 0 ].max, effort: 4 + (n % 3),
                          idempotency_key: "demo-#{i}-#{n}" }, actor: staff[:therapist])
       end
-      Care::CheckInIntake.call(enrolment: e, message: message, pain_score: score, actor: patient.user || staff[:therapist], at: today.to_time - 3.hours) if message
+      # Karl's message has waited longer than the answer-within SLA
+      at = name == "Karl Weber" ? today.to_time - 30.hours : today.to_time - 3.hours
+      Care::CheckInIntake.call(enrolment: e, message: message, pain_score: score, actor: patient.user || staff[:therapist], at: at) if message
     end
     finish_one!(clinic, staff)
+    end_one_early!(clinic, staff)
+    draft_examples!(clinic, staff)
     staff
+  end
+
+  # Helga Vogt stopped after 8 units: her claim needs a person's decision on what is billed.
+  def end_one_early!(clinic, staff)
+    e = Enrolment.joins(:patient).find_by(patients: { full_name: "Helga Vogt", clinic_id: clinic.id })
+    return unless e&.status == "active"
+
+    e.end_early!(reason: "patient_withdrew", on: e.training_units.maximum(:performed_on) + 7.days, actor: staff[:therapist])
+    draft = Care::DraftRequest.call(enrolment: e, kind: "closing_report", actor: staff[:physician])
+    GenerateDraftJob.perform_now(draft.id)
+    Care::DraftReview.new(draft.reload, actor: staff[:therapist]).approve!
+    e.reload.closing_report.sign!(staff[:physician])
+    Billing::ClaimAssembler.call(e.reload, actor: staff[:billing])
+  end
+
+  # Reply drafts waiting for review: one the checks passed, one they held (the simulated model is
+  # told to give dosing advice, which a reply must never do).
+  def draft_examples!(clinic, staff)
+    { "Anna Becker" => [], "Fatma Yilmaz" => [ :dosing ] }.each do |name, faults|
+      e = Enrolment.joins(:patient).find_by(patients: { full_name: name, clinic_id: clinic.id })
+      check_in = e&.check_ins&.first
+      next unless check_in && e.ai_drafts.none?
+
+      draft = Care::DraftRequest.call(enrolment: e, kind: "check_in_reply", actor: staff[:therapist], check_in: check_in)
+      GenerateDraftJob.perform_now(draft.id, client: Ai::Client.new(provider: Ai::Providers::Simulated.new(faults: faults)))
+    end
   end
 
   def user(clinic, role, name, email)
