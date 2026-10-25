@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# One image: the Rails API, the jobs worker (same image, `bin/jobs`) and the built console in public/.
+# One image: the Rails API (db/structure.sql is loaded with psql, hence postgresql-client),, the jobs worker (same image, `bin/jobs`) and the built console in public/.
 
 FROM node:22-slim AS console
 WORKDIR /web
@@ -19,7 +19,7 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
 FROM ruby:3.3.6-slim
-RUN apt-get update -qq && apt-get install -y --no-install-recommends libpq5 curl libyaml-0-2 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get install -y --no-install-recommends libpq5 postgresql-client curl libyaml-0-2 && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 ENV RAILS_ENV=production BUNDLE_DEPLOYMENT=1 BUNDLE_WITHOUT="development:test" BUNDLE_PATH=/usr/local/bundle \
     RAILS_LOG_TO_STDOUT=1

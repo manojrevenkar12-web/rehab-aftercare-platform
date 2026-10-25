@@ -91,3 +91,6 @@ jobs:
           curl -fs -X POST localhost:3000/api/v1/session -H "Content-Type: application/json" \
             -d '{"email":"theo@demo.example","password":"demo-password-1"}' | grep -q token
           docker logs app | tail -20
+      - name: show the app's log when it did not boot
+        if: failure()
+        run: docker logs app 2>&1 | tail -40 | sed 's/^/::warning::/'
