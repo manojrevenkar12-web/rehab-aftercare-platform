@@ -1,0 +1,130 @@
+module Ai
+  # Replaces a patient's identity in free text with placeholders before anything is sent to a
+  # model, and puts it back in the model's answer. Health content stays (the model needs it);
+  # who the patient is does not leave.
+  #
+  # It knows the patient's own identity (name parts, birth date in common German and ISO formats,
+  # insurance number with or without spaces, phone, email) and also catches the shapes of
+  # identifiers it was not told about: other e-mail addresses, phone numbers, insurance numbers.
+  # `leaks` is the last check before a request leaves: it looks for any identity value in the
+  # serialised request and the request is refused if it finds one.
+  class Pseudonymizer
+    Result = Data.define(:text, :mapping)
+
+    EMAIL = /[[:alnum:]._%+-]+@[[:alnum:].-]+\.[[:alpha:]]{2,}/
+    PHONE = /(?<!\w)(?:\+49|0049|0)[\s\/-]?(?:\(?\d{2,5}\)?[\s\/-]?)\d{3,}(?:[\s-]?\d{2,})*/
+    # Rentenversicherungsnummer: area (2 digits), birth date (6), initial (letter), serial (2), check (1)
+    RVNR = /\b\d{2}\s?\d{6}\s?[A-Z]\s?\d{2}\s?\d\b/
+    MIN_NAME_PART = 3
+
+    def initialize(identity)
+      @identity = identity.compact
+    end
+
+    def call(text)
+      return Result.new(text: text, mapping: {}) if text.blank?
+
+      mapping = {}
+      out = text.dup
+      replacements.each do |placeholder, patterns|
+        patterns.each do |re|
+          out = out.gsub(re) do |hit|
+            mapping[placeholder] ||= hit
+            placeholder
+          end
+        end
+      end
+      { "[E-MAIL]" => EMAIL, "[INSURANCE-NO]" => RVNR, "[PHONE]" => PHONE }.each do |placeholder, re|
+        out = out.gsub(re) { |hit| (mapping[placeholder] ||= hit) && placeholder }
+      end
+      Result.new(text: out, mapping: mapping)
+    end
+
+    # Puts identity back into a model's answer; placeholders the model invented stay visible.
+    def restore(text, mapping = placeholder_values)
+      mapping.reduce(text.to_s) { |acc, (placeholder, value)| acc.gsub(placeholder, value.to_s) }
+    end
+
+    # What each placeholder stands for, from the identity itself: drafts are stored pseudonymised
+    # and restored only when an authorised person reads them.
+    def placeholder_values
+      out = {}
+      out["[NAME]"] = @identity[:full_name] if @identity[:full_name]
+      name_parts.each_with_index { |part, i| out["[NAME-#{i + 1}]"] = part }
+      out["[BIRTH-DATE]"] = @identity[:birth_date].strftime("%d.%m.%Y") if @identity[:birth_date]
+      out["[INSURANCE-NO]"] = @identity[:insurance_number] if @identity[:insurance_number]
+      out["[E-MAIL]"] = @identity[:email] if @identity[:email]
+      out["[PHONE]"] = @identity[:phone] if @identity[:phone]
+      out
+    end
+
+    # Identity values present in a serialised request. Anything here means the request must not
+    # be sent.
+    def leaks(serialised)
+      haystack = normalise(serialised)
+      needles.select { |label, value| haystack.include?(normalise(value)) }.keys
+    end
+
+    private
+
+    def replacements
+      @replacements ||= begin
+        out = {}
+        out["[NAME]"] = [word(@identity[:full_name])] if @identity[:full_name]
+        name_parts.each_with_index { |part, i| out["[NAME-#{i + 1}]"] = [word(part)] }
+        out["[BIRTH-DATE]"] = date_patterns(@identity[:birth_date]) if @identity[:birth_date]
+        out["[INSURANCE-NO]"] = [spaced(@identity[:insurance_number])] if @identity[:insurance_number]
+        out["[E-MAIL]"] = [Regexp.new(Regexp.escape(@identity[:email]), Regexp::IGNORECASE)] if @identity[:email]
+        out["[PHONE]"] = [digits_pattern(@identity[:phone])] if @identity[:phone]
+        out
+      end
+    end
+
+    def name_parts
+      @identity[:full_name].to_s.split(/[\s-]+/).select { |p| p.length >= MIN_NAME_PART }
+    end
+
+    def needles
+      out = {}
+      name_parts.each_with_index { |p, i| out["name_part_#{i}"] = p }
+      out["birth_date"] = @identity[:birth_date].strftime("%d.%m.%Y") if @identity[:birth_date]
+      out["insurance_number"] = @identity[:insurance_number] if @identity[:insurance_number]
+      out["email"] = @identity[:email] if @identity[:email]
+      out["phone"] = @identity[:phone].gsub(/\D/, "") if @identity[:phone]
+      out
+    end
+
+    def normalise(value)
+      value.to_s.downcase.gsub(/[\s.\/-]/, "")
+    end
+
+    def word(value)
+      Regexp.new("(?<![[:alpha:]])#{Regexp.escape(value)}(?:s)?(?![[:alpha:]])", Regexp::IGNORECASE)
+    end
+
+    def spaced(value)
+      Regexp.new(value.gsub(/\s/, "").chars.map { |c| Regexp.escape(c) }.join("\\s?"), Regexp::IGNORECASE)
+    end
+
+    def digits_pattern(phone)
+      digits = phone.gsub(/\D/, "").sub(/\A(?:49|0049)/, "").sub(/\A0/, "")
+      Regexp.new("(?:\\+49|0049|0)?[\\s/()-]*" + digits.chars.join("[\\s/()-]*"))
+    end
+
+    def date_patterns(date)
+      d, m, y = date.day, date.month, date.year
+      [
+        /\b0?#{d}\.\s?0?#{m}\.\s?(?:#{y}|#{y % 100})\b/,
+        /\b#{date.iso8601}\b/,
+        /\b0?#{d}\/0?#{m}\/(?:#{y}|#{y % 100})\b/,
+        Regexp.new("\\b#{d}\\.?\\s+#{Regexp.union(month_names(m))}\\s+#{y}\\b", Regexp::IGNORECASE)
+      ]
+    end
+
+    def month_names(m)
+      de = %w[Januar Februar März April Mai Juni Juli August September Oktober November Dezember]
+      en = Date::MONTHNAMES.compact
+      [de[m - 1], en[m - 1], de[m - 1].sub("ä", "ae")]
+    end
+  end
+end

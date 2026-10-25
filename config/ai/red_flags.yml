@@ -1,0 +1,63 @@
+# Red flags in a patient's check-in. They are found by these rules, not by a model, and a red flag
+# always reaches a person: the check-in is escalated and any drafted reply tells the patient to
+# get medical help. Patterns are case-insensitive regular expressions over the patient's own
+# words (German and English). A match preceded within `negation_window` words by a negation
+# ("keine Atemnot", "no chest pain") does not count.
+negation_window: 3
+negations: [kein, keine, keinen, keiner, keinem, nicht, nie, ohne, "no", "not", "never", "without", "nor"]
+
+flags:
+  chest_pain:
+    severity: emergency
+    patterns:
+      - 'brust\s*schmerz\w*'
+      - 'schmerz\w*\s+(in|an)\s+der\s+brust'
+      - 'druck\w*\s+(auf|in)\s+der\s+brust'
+      - 'engegef(ü|ue)hl\w*'
+      - 'chest\s+(pain|pressure|tightness)'
+      - 'pain\s+in\s+(my\s+)?chest'
+  breathlessness:
+    severity: emergency
+    patterns:
+      - 'atemnot'
+      - 'kurzatmig\w*'
+      - 'keine\s+luft\s+(mehr\s+)?bekomm\w*'
+      - 'luftnot'
+      - "(short(ness)? of breath|can'?t breathe|cannot breathe|breathless)"
+  neurological:
+    severity: emergency
+    patterns:
+      - 'taubheit\w*'
+      - 'taub\b'
+      - 'l(ä|ae)hmung\w*'
+      - 'gel(ä|ae)hmt'
+      - 'kribbeln\s+(im|in)\s+(bein|arm|gesicht)\w*'
+      - 'sprach(st(ö|oe)rung|probleme)\w*'
+      - '(numb(ness)?|paraly[sz]\w*|slurred speech|face drooping)'
+  fall:
+    severity: urgent
+    patterns:
+      - 'gest(ü|ue)rzt'
+      - 'sturz'
+      - 'hingefallen'
+      - '\b(i\s+)?(fell|have\s+fallen|had\s+a\s+fall)\b'
+  wound_or_fever:
+    severity: urgent
+    patterns:
+      - 'fieber'
+      - 'wunde\s+\w*\s*(rot|ger(ö|oe)tet|eitert|n(ä|ae)sst|geschwollen)'
+      - '(ger(ö|oe)tet|eitert|n(ä|ae)sst)\w*\s+(die\s+)?(wunde|narbe)'
+      - '(fever|wound\s+\w*\s*(red|swollen|oozing|infected)|pus)'
+  self_harm:
+    severity: emergency
+    patterns:
+      - 'suizid\w*'
+      - 'umbringen'
+      - 'nicht\s+mehr\s+leben'
+      - 'mir\s+(et)?was\s+an(tun)?'
+      - '(suicid\w*|kill\s+myself|end\s+my\s+life|hurt\s+myself)'
+
+pain:
+  # a pain score this high, or this much above the previous check-in, is a flag on its own
+  severe_at: 8
+  jump_of: 3

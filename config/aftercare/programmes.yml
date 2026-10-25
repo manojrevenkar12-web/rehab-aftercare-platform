@@ -1,0 +1,48 @@
+# DRV digital aftercare programmes (digitale Reha-Nachsorge) and their time rules.
+# Sources (retrieved 2026-10-25):
+# - nachderreha.de, Digitale Nachsorge FAQ: IRENA digital 24 units (36 neurology, 42 obesity);
+#   T-RENA digital 18 individual units; Psy-RENA 25 group units + 2 individual sessions.
+# - bela.health summary of the DRV T-RENA rules: individual units of 20 minutes; start within
+#   6 weeks if possible and at the latest 3 months after rehab; finish at the latest 12 months
+#   after rehab, no extension; continuing after an uninterrupted break of more than 6 weeks is
+#   excluded if the aftercare goal can no longer be reached; invoice, participation record
+#   (G4832) and closing documentation (G4819) per insured person after completion; G4802 is the
+#   cost approval; every unit is documented per person and kept for at least 10 years.
+# The DRV rate table ("Kernangebote der Reha-Nachsorge", annex) was not machine-readable from
+# here: rates below are placeholders to be set from it, and are marked as such in every claim.
+programmes:
+  t_rena_digital:
+    name: "T-RENA digital (training therapy, individual)"
+    units: { default: 18 }
+    unit_minutes: 20
+    min_unit_minutes: 20
+    rate_cents_per_unit: 2500
+    rate_source: placeholder (illustrative, not the DRV rate)
+  irena_digital:
+    name: "IRENA digital (multimodal)"
+    units: { default: 24, neurology: 36, obesity: 42 }
+    unit_minutes: 45
+    min_unit_minutes: 30
+    rate_cents_per_unit: 3000
+    rate_source: placeholder (illustrative, not the DRV rate)
+  psy_rena_digital:
+    name: "Psy-RENA digital (psychosomatic, group by video)"
+    units: { default: 27 } # 25 group units + 2 individual sessions
+    unit_minutes: 90
+    min_unit_minutes: 60
+    rate_cents_per_unit: 3500
+    rate_source: placeholder (illustrative, not the DRV rate)
+
+deadlines:
+  ideal_start_weeks: 6
+  latest_start_months: 3
+  latest_finish_months: 12
+  max_break_weeks: 6
+  warn_days_before: 7
+
+billing:
+  # The sources do not say how an early end is paid. A claim for an enrolment that ended early is
+  # put to a person (needs_review) rather than priced by a guess.
+  early_end: needs_review
+  documents: [invoice, participation_record, closing_documentation]
+  record_retention_years: 10

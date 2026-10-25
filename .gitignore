@@ -1,0 +1,15 @@
+/.bundle
+/vendor/bundle
+/vendor/cache
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/config/master.key
+/config/credentials.yml.enc
+.env
+/coverage
+/storage/*
+node_modules/
+/web/dist
+.byebug_history
