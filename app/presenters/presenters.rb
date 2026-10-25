@@ -7,11 +7,14 @@ module Presenters
     { id: u.id, name: u.name, email: u.email, role: u.role, clinic: u.clinic.name }
   end
 
-  def caseload_row(patient, today, clinical:)
+  def caseload_row(patient, today, clinical:, now: Time.current)
     e = patient.enrolments.max_by(&:created_at)
     findings = e ? e.deadlines.findings(today) : []
     open_flags = clinical && e ? e.check_ins.select { |c| c.status == "escalated" } : []
-    attention = (findings.map { |f| { blocking: 3, urgent: 2, notice: 1 }.fetch(f.severity, 0) }.max || 0) + (open_flags.any? ? 4 : 0)
+    unanswered = clinical && e ? e.check_ins.reject { |c| c.status == "answered" } : []
+    overdue = unanswered.count { |c| c.submitted_at < now - Aftercare::Programmes.check_in_answer_hours.hours }
+    attention = (findings.map { |f| { blocking: 3, urgent: 2, notice: 1 }.fetch(f.severity, 0) }.max || 0) +
+                (open_flags.any? ? 4 : 0) + (overdue.positive? ? 2 : 0)
     {
       id: patient.id,
       pseudonym: patient.pseudonym,
@@ -20,6 +23,8 @@ module Presenters
       rehab_ended_on: patient.rehab_ended_on,
       enrolment: e && enrolment(e, today: today),
       escalations: open_flags.size,
+      unanswered: unanswered.size,
+      overdue: overdue,
       attention: attention
     }
   end
@@ -56,13 +61,15 @@ module Presenters
 
   def check_in(c)
     { id: c.id, submitted_at: c.submitted_at, pain_score: c.pain_score, message: c.message, status: c.status, red_flags: c.red_flags,
-      set_aside: c.set_aside }
+      set_aside: c.set_aside, screen: c.screen.slice("model", "added", "error").presence }
   end
 
   def timeline(e, today:, viewer:)
     {
+      today: today,
       enrolment: enrolment(e, today: today),
-      patient: { id: e.patient.id, pseudonym: e.patient.pseudonym, name: e.patient.full_name, indication: e.patient.indication },
+      patient: { id: e.patient.id, pseudonym: e.patient.pseudonym, name: e.patient.full_name, indication: e.patient.indication,
+                 rehab_ended_on: e.patient.rehab_ended_on },
       units: e.training_units.order(:performed_on).map { |u| unit(u, clinical: true) },
       check_ins: e.check_ins.order(submitted_at: :desc).map { |c| check_in(c) },
       drafts: AiDraftPolicy.new(viewer, e.ai_drafts.new).show? ? e.ai_drafts.order(created_at: :desc).map { |d| draft(d) } : [],

@@ -1,0 +1,15 @@
+# A model reads every check-in after the rules have. It can only add red flags, never remove
+# one, and a flag counts only if the model quotes the patient's words that show it: a quote not
+# found in the message is dropped. If the model is unavailable the rules' flags stand alone, and
+# every check-in is still answered by a person within check_ins.answer_within_hours
+# (config/aftercare/programmes.yml). See docs/adr/0004-rules-then-model-screen.md.
+enabled: true
+max_flags: 4
+min_quote_chars: 4
+flags:
+  chest_pain: { severity: emergency, means: "chest pain, pressure or tightness in the chest" }
+  breathlessness: { severity: emergency, means: "shortness of breath or not getting enough air, beyond what is normal for them on exertion" }
+  neurological: { severity: emergency, means: "numbness, paralysis or sudden weakness in a limb or the face, or speech problems" }
+  self_harm: { severity: emergency, means: "thoughts of suicide, of not wanting to live, or of harming themselves" }
+  fall: { severity: urgent, means: "a fall that happened to the patient (not fear of falling, not a near miss, not someone else)" }
+  wound_or_fever: { severity: urgent, means: "fever of 38 °C or more, or a wound or scar that is red, swollen, oozing or has pus" }

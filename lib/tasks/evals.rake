@@ -37,3 +37,18 @@ namespace :evals do
     puts Evals::Report.markdown(doc)
   end
 end
+
+namespace :evals do
+  desc "Run the red-flag suite with a real model screen (AI_PROVIDER, AI_MODEL...): bin/rails evals:screen[set2]"
+  task :screen, [ :set ] => :environment do |_, args|
+    set = args[:set] || abort("name the set: dev, set1 or set2")
+    client = Ai::Client.default
+    abort("evals:screen needs a real model (AI_PROVIDER=openai_compatible); the simulated one cannot read") if client.provider.is_a?(Ai::Providers::Simulated)
+    dir = set == "dev" ? Rails.root.join("evals/dev") : Rails.root.join("evals/heldout/#{set}")
+    held_out = set != "dev" && !dir.join("STATUS").exist?
+    label = "screen-#{set}-#{client.model.to_s.parameterize}"
+    doc = Evals::Report.write(label, Evals::Runner.new(dir, screen_client: client).run(suites: %w[red_flags]),
+                              set: set, first_run_only: held_out)
+    puts Evals::Report.markdown(doc)
+  end
+end

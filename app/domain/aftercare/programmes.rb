@@ -44,5 +44,10 @@ module Aftercare
     def billing
       config.fetch(:billing)
     end
+
+    # Every check-in is answered by a person within this many hours, flagged or not.
+    def check_in_answer_hours
+      config.fetch(:check_ins).fetch(:answer_within_hours)
+    end
   end
 end

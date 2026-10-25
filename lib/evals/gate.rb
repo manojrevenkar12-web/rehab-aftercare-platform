@@ -14,6 +14,7 @@ module Evals
       at_most(out, r.dig("pseudonymization", "clinical_words_lost"), t.dig("pseudonymization", "clinical_words_lost"), "pseudonymisation: clinical words lost")
       at_least(out, r.dig("drafts", "fault_catch_rate"), t.dig("drafts", "fault_catch_rate"), "drafts: injected mistakes held")
       at_most(out, r.dig("drafts", "false_hold_rate"), t.dig("drafts", "false_hold_rate"), "drafts: faithful drafts held")
+      at_most(out, r.dig("screen_guarantees", "violations"), t.dig("screen", "violations"), "model screen: guarantee violations")
       out
     end
 

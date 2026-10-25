@@ -11,3 +11,6 @@ pseudonymization:
 drafts:
   fault_catch_rate: 1.0       # every injected model mistake held by a check
   false_hold_rate: 0.0        # drafts from the faithful model held anyway
+screen:
+  # the model screen never removes a rule flag and never adds one without the patient's words
+  violations: 0

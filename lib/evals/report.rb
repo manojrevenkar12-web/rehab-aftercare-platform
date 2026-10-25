@@ -25,7 +25,8 @@ module Evals
       r = doc["results"]
       lines = [ "# Evaluation: #{doc['label']}", "", "Set `#{doc['set']}`, recorded #{doc['recorded_at']} at #{doc['git'] || 'unknown commit'}.", "" ]
       if (rf = r["red_flags"])
-        lines += [ "## Red flags (rules)", "", "| Measure | Value |", "|---|---:|",
+        title = rf["screen"].to_s.start_with?("off") || rf["screen"].nil? ? "## Red flags (rules)" : "## Red flags (rules + model screen: #{rf['screen']})"
+        lines += [ title, "", "| Measure | Value |", "|---|---:|",
                   "| Cases | #{rf['cases']} |",
                   "| Emergency flags found | #{rf.dig('by_severity', 'emergency', 'found')} of #{rf.dig('by_severity', 'emergency', 'expected')} (#{pct(rf['emergency_recall'])}) |",
                   "| Urgent flags found | #{rf.dig('by_severity', 'urgent', 'found')} of #{rf.dig('by_severity', 'urgent', 'expected')} (#{pct(rf['urgent_recall'])}) |",
@@ -47,6 +48,12 @@ module Evals
                   "| Injected mistake | Held |", "|---|---:|" ]
         lines += dr["by_fault"].map { |f, v| "| #{f} | #{v} |" }
         lines << ""
+      end
+      if (sg = r["screen_guarantees"])
+        lines += [ "## Model screen guarantees (simulated adversarial model)", "",
+                   "#{sg['runs']} runs in which the model invents a quote, an unknown flag, tries to remove a flag or returns no JSON: " \
+                   "#{sg['violations']} violations.", "" ]
+        lines += sg["examples"].map { |v| "- #{v['id']} (#{v['fault']}): #{v['problem']}" }
       end
       lines.join("\n")
     end

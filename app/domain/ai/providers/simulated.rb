@@ -6,7 +6,8 @@ module Ai
     # proves that the checks catch them.
     class Simulated
       FAULTS = %i[drop_flag dosing invented_placeholder stray_number invent_number missing_section
-                  unknown_exercise contraindicated level_jump too_many out_of_bounds no_answer].freeze
+                  unknown_exercise contraindicated level_jump too_many out_of_bounds no_answer
+                  invented_quote unknown_code remove_flag not_json].freeze
 
       attr_reader :model, :faults, :calls
 
@@ -26,6 +27,7 @@ module Ai
         when "check_in_reply" then reply(check_in(facts))
         when "closing_report" then reply(closing(facts))
         when "plan_change" then agent_step(facts, messages)
+        when "check_in_screen" then reply(screen(facts))
         else raise ArgumentError, "unknown task #{task}"
         end
       end
@@ -38,6 +40,21 @@ module Ai
 
       def fault?(name)
         @faults.include?(name)
+      end
+
+      # --- check-in screen ----------------------------------------------------------------------
+      # The simulated screen cannot read; faithfully it adds nothing. Its faults are the ways a
+      # real model could try to get past the screen's guarantees.
+
+      def screen(f)
+        return "not json" if fault?(:not_json)
+
+        flags = []
+        flags << { "code" => "chest_pain", "quote" => "crushing pain behind the sternum" } if fault?(:invented_quote)
+        flags << { "code" => "dizziness", "quote" => f["message"].to_s[0, 12] } if fault?(:unknown_code)
+        out = { "flags" => flags }
+        out["remove"] = Array(f["already_flagged"]) if fault?(:remove_flag)
+        out
       end
 
       # --- check-in replies --------------------------------------------------------------------

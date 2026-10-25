@@ -64,9 +64,11 @@ RSpec.describe "Care flow through the API", type: :request do
     ci = Care::CheckInIntake.call(enrolment: e, message: "Anna Becker, geb. 14.03.1968, Tel 030 1234567: Knie schmerzt", pain_score: 3, actor: s[:patient_user])
     Care::DraftRequest.call(enrolment: e, kind: "check_in_reply", actor: s[:therapist], check_in: ci)
     perform_enqueued_jobs
-    expect(seen.size).to eq(1)
-    expect(seen.first).not_to include("Becker", "Anna", "1968", "1234567")
-    expect(seen.first).to include("[NAME]", "Knie schmerzt")
+    expect(seen.size).to eq(2) # the screen, then the reply
+    seen.each do |request|
+      expect(request).not_to include("Becker", "Anna", "1968", "1234567")
+      expect(request).to include("[NAME]", "Knie schmerzt")
+    end
   end
 
   it "takes a completed enrolment from closing report draft to a paid claim" do

@@ -15,6 +15,7 @@ module Care
       )
       AuditEvent.record!(actor: actor, action: flags.any? ? "check_in.escalated" : "check_in.received", subject: enrolment,
                          data: { check_in_id: check_in.id, flags: flags.map(&:code) })
+      ScreenCheckInJob.perform_later(check_in.id) if Ai::Workflows::CheckInScreen.enabled?
       check_in
     end
   end

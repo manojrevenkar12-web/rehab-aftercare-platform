@@ -40,6 +40,11 @@ deadlines:
   max_break_weeks: 6
   warn_days_before: 7
 
+check_ins:
+  # Every check-in is answered by a person within this time, flagged or not. The rules and the
+  # model screen decide the order, not whether a message is read.
+  answer_within_hours: 24
+
 billing:
   # The sources do not say how an early end is paid. A claim for an enrolment that ended early is
   # put to a person (needs_review) rather than priced by a guess.

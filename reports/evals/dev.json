@@ -1,10 +1,11 @@
 {
   "label": "dev",
   "set": "dev",
-  "recorded_at": "2026-10-25T13:32:37Z",
-  "git": "cc930c0",
+  "recorded_at": "2026-10-25T13:41:52Z",
+  "git": "81ac9db",
   "results": {
     "red_flags": {
+      "screen": "off (rules only)",
       "cases": 42,
       "emergency_recall": 1.0,
       "urgent_recall": 1.0,
@@ -53,6 +54,11 @@
       },
       "false_holds": [],
       "escaped": []
+    },
+    "screen_guarantees": {
+      "runs": 168,
+      "violations": 0,
+      "examples": []
     }
   }
 }

@@ -8,14 +8,20 @@ module Evals
   # - drafts: the three AI workflows on varied facts, run on the faithful simulated model (no
   #   draft may be held) and with every injected mistake (every one must be held).
   class Runner
-    SUITES = %w[red_flags pseudonymization drafts].freeze
+    SUITES = %w[red_flags pseudonymization drafts screen_guarantees].freeze
 
-    def initialize(dir)
+    # screen_client: a real model for the check-in screen (evals:screen); without one the
+    # red-flag suite measures the rules alone.
+    def initialize(dir, screen_client: nil)
       @dir = Pathname(dir)
+      @screen_client = screen_client
     end
 
     def run(suites: SUITES)
-      suites.to_h { |s| [ s, (@dir.join("#{s}.yml").exist? ? send(s, load(s)) : nil) ] }.compact
+      suites.to_h do |s|
+        file = s == "screen_guarantees" ? "red_flags" : s
+        [ s, (@dir.join("#{file}.yml").exist? ? send(s, load(file)) : nil) ]
+      end.compact
     end
 
     private
@@ -27,6 +33,7 @@ module Evals
       severities.merge!("severe_pain" => "urgent", "pain_jump" => "urgent")
       rows = cases.map do |c|
         found = Ai::RedFlags.find(message: c.fetch("message"), pain_score: c["pain_score"], previous_pain_score: c["previous_pain_score"]).map(&:code)
+        found |= screened(c["message"], found).added.map { |f| f["code"] } if @screen_client
         expected = Array(c["expected"])
         { "id" => c["id"], "expected" => expected, "found" => found, "missed" => expected - found, "extra" => found - expected }
       end
@@ -37,6 +44,7 @@ module Evals
       end
       clean = rows.select { |r| r["expected"].empty? }
       {
+        "screen" => @screen_client ? @screen_client.model : "off (rules only)",
         "cases" => rows.size,
         "emergency_recall" => by_severity.dig("emergency", "recall"),
         "urgent_recall" => by_severity.dig("urgent", "recall"),
@@ -62,6 +70,35 @@ module Evals
       end
       { "cases" => cases.size, "mentions" => mentions, "leak_rate" => ratio(leaked.size, mentions), "leaked" => leaked,
         "clinical_words_lost" => lost.size, "lost" => lost }
+    end
+
+    def screened(message, already, client: @screen_client)
+      Ai::Workflows::CheckInScreen.new(client: client).call({ "message" => message, "already_flagged" => already })
+    end
+
+    SCREEN_FAULTS = %i[invented_quote unknown_code remove_flag not_json].freeze
+
+    # Whatever the model returns, the screen never removes a rule flag and never adds a flag
+    # whose quote is not in the message. Each fault is a way a model could try.
+    def screen_guarantees(cases)
+      violations = []
+      runs = 0
+      cases.each do |c|
+        rules = Ai::RedFlags.find(message: c.fetch("message")).map(&:code)
+        SCREEN_FAULTS.each do |fault|
+          runs += 1
+          client = Ai::Client.new(provider: Ai::Providers::Simulated.new(faults: [ fault ]))
+          out = screened(c["message"], rules, client: client)
+          final = rules | out.added.map { |f| f["code"] }
+          violations << { "id" => c["id"], "fault" => fault.to_s, "problem" => "removed a rule flag" } unless (rules - final).empty?
+          out.added.each do |f|
+            next if c["message"].downcase.include?(f["evidence"].downcase)
+
+            violations << { "id" => c["id"], "fault" => fault.to_s, "problem" => "added #{f['code']} without the patient's words" }
+          end
+        end
+      end
+      { "runs" => runs, "violations" => violations.size, "examples" => violations.first(5) }
     end
 
     FAULTS = {

@@ -202,6 +202,7 @@ CREATE TABLE public.check_ins (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     set_aside jsonb DEFAULT '[]'::jsonb NOT NULL,
+    screen jsonb DEFAULT '{}'::jsonb NOT NULL,
     CONSTRAINT check_ins_status_known CHECK (((status)::text = ANY (ARRAY[('new'::character varying)::text, ('escalated'::character varying)::text, ('answered'::character varying)::text])))
 );
 
@@ -2149,6 +2150,7 @@ ALTER TABLE ONLY public.patients
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261025000004'),
 ('20261025000003'),
 ('20261025000002'),
 ('20261025000001');

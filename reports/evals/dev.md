@@ -1,6 +1,6 @@
 # Evaluation: dev
 
-Set `dev`, recorded 2026-10-25T13:32:37Z at cc930c0.
+Set `dev`, recorded 2026-10-25T13:41:52Z at 81ac9db.
 
 ## Red flags (rules)
 
@@ -34,3 +34,7 @@ Set `dev`, recorded 2026-10-25T13:32:37Z at cc930c0.
 | out_of_bounds | 3/3 |
 | no_answer | 3/3 |
 | contraindicated | 1/1 |
+
+## Model screen guarantees (simulated adversarial model)
+
+168 runs in which the model invents a quote, an unknown flag, tries to remove a flag or returns no JSON: 0 violations.
