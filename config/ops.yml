@@ -1,0 +1,20 @@
+# What the operations view watches and when it raises an alert (app/domain/ops). The answer-within
+# time for check-ins is not here: it is check_ins.answer_within_hours in
+# config/aftercare/programmes.yml, the one place the product's promise is set.
+window_days: 14
+check_ins:
+  sla_share_min: 0.95          # share of due check-ins answered within the promise
+queue:
+  oldest_ready_minutes_max: 10 # a job waiting longer than this means workers are short or stuck
+  failed_max: 0                # any failed job is somebody's draft or screen that did not happen
+  worker_heartbeat_minutes: 5  # a worker that has not reported for this long is treated as gone
+models:
+  error_share_max: 0.05        # per workflow, over the window
+  p95_latency_ms_max: 20000    # per workflow: a reviewer waits for a draft about this long at worst
+  daily_cost_eur_max: 5.0      # per clinic and day, at the rates in config/ai/costs.yml
+release_gate:
+  # A new prompt version or model (a "release") is compared with the one before it on what
+  # reviewers did with its drafts, pooled over all clinics. See docs/adr/0006.
+  min_reviews: 40              # per release, before any decision
+  confidence_z: 1.96           # two-sided 95% intervals
+  non_inferiority_margin: 0.05 # pass only if the candidate is, with 95% confidence, at most 5 points worse

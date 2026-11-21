@@ -10,6 +10,7 @@ export const keys = {
   draft: (id: number) => ["draft", id] as const,
   claims: ["claims"] as const,
   audit: ["audit"] as const,
+  ops: ["ops"] as const,
 };
 
 export const useMe = (enabled: boolean) => useQuery({ queryKey: keys.me, queryFn: api.me, enabled, retry: false });
@@ -17,6 +18,8 @@ export const useCaseload = () => useQuery({ queryKey: keys.caseload, queryFn: ap
 export const useTimeline = (id: number) => useQuery({ queryKey: keys.timeline(id), queryFn: () => api.timeline(id) });
 export const useClaims = () => useQuery({ queryKey: keys.claims, queryFn: api.claims });
 export const useAudit = () => useQuery({ queryKey: keys.audit, queryFn: api.audit });
+/** The operations view refreshes itself every minute while it is open. */
+export const useOps = () => useQuery({ queryKey: keys.ops, queryFn: api.ops, refetchInterval: 60_000 });
 
 /** A queued draft is polled until the model has answered. */
 export const useDraft = (id: number, initial?: Draft) =>

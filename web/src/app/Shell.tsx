@@ -8,6 +8,7 @@ import styles from "./Shell.module.css";
 const NAV: { to: string; label: string; roles: Role[] }[] = [
   { to: "/", label: "Caseload", roles: ["therapist", "physician", "clinic_admin", "billing"] },
   { to: "/billing", label: "Billing", roles: ["billing", "clinic_admin"] },
+  { to: "/operations", label: "Operations", roles: ["clinic_admin"] },
   { to: "/audit", label: "Audit trail", roles: ["clinic_admin"] },
 ];
 

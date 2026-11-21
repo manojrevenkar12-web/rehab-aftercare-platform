@@ -87,7 +87,7 @@ module Evals
         rules = Ai::RedFlags.find(message: c.fetch("message")).map(&:code)
         SCREEN_FAULTS.each do |fault|
           runs += 1
-          client = Ai::Client.new(provider: Ai::Providers::Simulated.new(faults: [ fault ]))
+          client = Ai::Client.new(provider: Ai::Providers::Simulated.new(faults: [ fault ]), log: nil)
           out = screened(c["message"], rules, client: client)
           final = rules | out.added.map { |f| f["code"] }
           violations << { "id" => c["id"], "fault" => fault.to_s, "problem" => "removed a rule flag" } unless (rules - final).empty?
@@ -132,7 +132,7 @@ module Evals
     end
 
     def run_draft(kind, facts, library, faults)
-      client = Ai::Client.new(provider: Ai::Providers::Simulated.new(faults: faults))
+      client = Ai::Client.new(provider: Ai::Providers::Simulated.new(faults: faults), log: nil)
       case kind
       when "check_in_reply" then Ai::Workflows::CheckInReply.new(client: client).call(facts)
       when "closing_report" then Ai::Workflows::ClosingReport.new(client: client).call(facts)

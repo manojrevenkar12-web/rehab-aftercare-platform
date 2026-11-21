@@ -9,6 +9,12 @@ class ScreenCheckInJob < ApplicationJob
     check_in = CheckIn.find(check_in_id)
     return if check_in.screen.present?
 
+    Ai::CallContext.set(clinic_id: check_in.enrolment.patient.clinic_id) { screen(check_in, client) }
+  end
+
+  private
+
+  def screen(check_in, client)
     e = check_in.enrolment
     pseudonymizer = Ai::Pseudonymizer.new(e.patient.identity)
     facts = {
@@ -22,8 +28,6 @@ class ScreenCheckInJob < ApplicationJob
     check_in.update!(screen: { "error" => err.message, "screened_at" => Time.current.iso8601 })
     AuditEvent.record!(action: "check_in.screen_leak_refused", subject: e, data: { check_in_id: check_in.id })
   end
-
-  private
 
   def record(check_in, outcome)
     CheckIn.transaction do

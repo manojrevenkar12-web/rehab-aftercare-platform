@@ -210,3 +210,102 @@ export interface AuditLog {
   events: AuditEvent[];
   chain_broken_at: number | null;
 }
+
+// --- operations (GET /api/v1/ops) ----------------------------------------------------------
+
+export type ReleaseDecision = "pass" | "wait" | "block";
+
+export interface ReleaseCohort {
+  prompt_version: string;
+  model: string;
+  label: string;
+  generated: number;
+  held_by_checks: number;
+  reviewed: number;
+  rejected: number;
+  edited: number;
+  unchanged: number;
+  first_seen: string | null;
+}
+
+export interface ReleaseMetric {
+  baseline: number | null;
+  candidate: number | null;
+  difference: number | null;
+  low: number | null;
+  high: number | null;
+}
+
+export interface ReleaseVerdict {
+  kind: DraftKind;
+  decision: ReleaseDecision;
+  reasons: string[];
+  metrics: Partial<Record<"rejected" | "needed_changes", ReleaseMetric>>;
+  baseline: ReleaseCohort | null;
+  candidate: ReleaseCohort | null;
+}
+
+export interface OpsAlert {
+  level: "critical" | "warning";
+  code: string;
+  message: string;
+}
+
+export interface OpsSnapshot {
+  clinic: { id: number; name: string };
+  generated_at: string;
+  window: { from: string; to: string; days: number };
+  targets: { check_in_share: number; release_min_reviews: number; release_margin: number };
+  check_ins: {
+    promise_hours: number;
+    submitted: number;
+    due: number;
+    met: number;
+    share_met: number | null;
+    hours_to_answer: { median: number | null; p90: number | null };
+    open: number;
+    open_escalated: number;
+    open_overdue: number;
+    oldest_open_hours: number | null;
+    by_day: { date: string; submitted: number; on_time: number; late: number }[];
+  };
+  drafts: {
+    kind: DraftKind;
+    generated: number;
+    held_by_checks: number;
+    waiting_review: number;
+    approved_unchanged: number;
+    approved_edited: number;
+    rejected: number;
+    failed: number;
+    share_unchanged: number | null;
+    median_review_minutes: number | null;
+  }[];
+  models: {
+    tasks: {
+      task: string;
+      prompt_version: string | null;
+      calls: number;
+      errors: number;
+      refused: number;
+      error_share: number | null;
+      latency_ms: { p50: number | null; p95: number | null };
+      input_tokens: number;
+      output_tokens: number;
+      tokens_estimated: boolean;
+      cost_eur: number;
+      cost_per_call_eur: number | null;
+    }[];
+    cost_eur: number;
+    cost_by_day: { date: string; cost_eur: number }[];
+    models_used: string[];
+    unpriced_models: string[];
+  };
+  queue: {
+    queues: { queue: string; ready: number; scheduled: number; running: number; oldest_ready_minutes: number | null }[];
+    failed: { job: string; count: number; last_failed_at: string | null }[];
+    workers_alive: number;
+  };
+  releases: ReleaseVerdict[];
+  alerts: OpsAlert[];
+}

@@ -1,0 +1,414 @@
+.page {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.header {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.title {
+  font-size: var(--text-display);
+  line-height: var(--leading-tight);
+}
+
+.lead,
+.sectionLead {
+  max-width: var(--measure);
+  color: var(--ink-muted);
+}
+
+.section {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.sectionTitle {
+  font-size: var(--text-lg);
+}
+
+.none {
+  color: var(--ink-faint);
+}
+
+.page [data-alarm] {
+  color: var(--urgent);
+  font-weight: var(--weight-bold);
+}
+
+/* --- alerts ----------------------------------------------------------------------------- */
+
+.allClear {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--ok-wash);
+  color: var(--ok);
+  font-weight: var(--weight-bold);
+}
+
+.alertList {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.alert {
+  display: grid;
+  grid-template-columns: var(--col-sm) 1fr;
+  gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-3) var(--space-4);
+  border-left: var(--rule-mark) solid currentcolor;
+  border-radius: var(--radius-sm);
+}
+
+.alert[data-level="critical"] {
+  background: var(--emergency-wash);
+  color: var(--emergency);
+}
+
+.alert[data-level="warning"] {
+  background: var(--urgent-wash);
+  color: var(--urgent);
+}
+
+.alertLevel {
+  font-weight: var(--weight-bold);
+}
+
+.alert > span:last-child {
+  color: var(--ink);
+}
+
+/* --- the promise ------------------------------------------------------------------------ */
+
+.promise {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-7);
+  align-items: end;
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.figure {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.figureValue {
+  font-size: calc(var(--text-display) * 1.6);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  color: var(--ok);
+  font-variant-numeric: tabular-nums;
+}
+
+.figure[data-missed] .figureValue {
+  color: var(--emergency);
+}
+
+.figureLabel {
+  max-width: 22ch;
+  color: var(--ink-muted);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--col-sm), 1fr));
+  flex: 1;
+  gap: var(--space-4);
+}
+
+.facts dt {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.facts dd {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.facts [data-alarm] dd,
+.facts [data-alarm] dt {
+  color: var(--urgent);
+}
+
+.factNote {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  color: var(--ink-muted);
+}
+
+.daily {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.dailyChart {
+  width: 100%;
+  height: auto;
+}
+
+.dayHit {
+  fill: transparent;
+}
+
+.onTime {
+  fill: var(--ok);
+}
+
+.late {
+  fill: var(--urgent);
+}
+
+.axisText {
+  font-size: 10px;
+  fill: var(--ink-faint);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.key::before {
+  content: "";
+  display: inline-block;
+  width: var(--space-3);
+  height: var(--space-3);
+  margin-right: var(--space-2);
+  border-radius: var(--radius-sm);
+  vertical-align: -1px;
+}
+
+.key[data-series="on-time"]::before {
+  background: var(--ok);
+}
+
+.key[data-series="late"]::before {
+  background: var(--urgent);
+}
+
+/* --- the release gate -------------------------------------------------------------------- */
+
+.gate {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.plotKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.plotKey svg {
+  margin-right: var(--space-2);
+  vertical-align: middle;
+}
+
+.gateRow {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  padding: var(--space-4) var(--space-5);
+  border-top: var(--rule-weight) solid var(--rule);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.gateRow[data-decision="pass"] {
+  border-top-color: var(--ok);
+}
+
+.gateRow[data-decision="block"] {
+  border-top-color: var(--emergency);
+}
+
+.gateHead {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gateKind {
+  font-size: var(--text-md);
+}
+
+.gateReleases {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.release {
+  color: var(--ink);
+  font-weight: var(--weight-bold);
+}
+
+.gateReason {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.gateRow[data-decision="block"] .gateReason {
+  color: var(--emergency);
+  font-weight: var(--weight-bold);
+}
+
+.metric {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+}
+
+.metricName {
+  font-size: var(--text-sm);
+}
+
+.metricRates {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.metricNone {
+  grid-column: 1 / -1;
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+}
+
+.plot {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.plotAxis {
+  stroke: var(--rule);
+  stroke-width: 2;
+}
+
+.plotZero {
+  stroke: var(--ink-faint);
+  stroke-width: 2;
+}
+
+.plotMargin {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.plotInterval {
+  stroke: var(--ink-muted);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.plotPoint {
+  fill: var(--surface);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.plot[data-verdict="worse"] .plotInterval {
+  stroke: var(--emergency);
+}
+
+.plot[data-verdict="worse"] .plotPoint {
+  stroke: var(--emergency);
+}
+
+.plot[data-verdict="fine"] .plotInterval {
+  stroke: var(--ok);
+}
+
+.plot[data-verdict="fine"] .plotPoint {
+  stroke: var(--ok);
+}
+
+/* --- tables ------------------------------------------------------------------------------ */
+
+.scroll {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table th {
+  text-align: left;
+}
+
+.table thead th {
+  color: var(--ink-muted);
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-4);
+  border-bottom: var(--hairline) solid var(--rule);
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child > * {
+  border-bottom: none;
+}
+
+.n {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th.n {
+  text-align: right;
+}
+
+.code {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+.failed {
+  padding-left: var(--space-5);
+  color: var(--urgent);
+  font-size: var(--text-sm);
+}
+
+@media (width <= 40rem) {
+  .alert {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+
+  .gate {
+    grid-template-columns: 1fr;
+  }
+}

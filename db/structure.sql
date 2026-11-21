@@ -27,6 +27,48 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: ai_calls; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_calls (
+    id bigint NOT NULL,
+    clinic_id bigint,
+    task character varying NOT NULL,
+    prompt_version character varying,
+    model character varying NOT NULL,
+    provider character varying NOT NULL,
+    outcome character varying NOT NULL,
+    latency_ms integer NOT NULL,
+    input_tokens integer DEFAULT 0 NOT NULL,
+    output_tokens integer DEFAULT 0 NOT NULL,
+    tokens_estimated boolean DEFAULT false NOT NULL,
+    cost_microeuros bigint DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT ai_calls_not_negative CHECK (((latency_ms >= 0) AND (input_tokens >= 0) AND (output_tokens >= 0) AND (cost_microeuros >= 0))),
+    CONSTRAINT ai_calls_outcome_known CHECK (((outcome)::text = ANY ((ARRAY['ok'::character varying, 'error'::character varying, 'refused'::character varying])::text[])))
+);
+
+
+--
+-- Name: ai_calls_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_calls_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_calls_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_calls_id_seq OWNED BY public.ai_calls.id;
+
+
+--
 -- Name: ai_drafts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -46,6 +88,7 @@ CREATE TABLE public.ai_drafts (
     reviewed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    edited boolean,
     CONSTRAINT ai_drafts_kind_known CHECK (((kind)::text = ANY (ARRAY[('check_in_reply'::character varying)::text, ('closing_report'::character varying)::text, ('plan_change'::character varying)::text]))),
     CONSTRAINT ai_drafts_status_known CHECK (((status)::text = ANY (ARRAY[('queued'::character varying)::text, ('ready'::character varying)::text, ('held'::character varying)::text, ('failed'::character varying)::text, ('approved'::character varying)::text, ('rejected'::character varying)::text])))
 );
@@ -203,6 +246,7 @@ CREATE TABLE public.check_ins (
     updated_at timestamp(6) without time zone NOT NULL,
     set_aside jsonb DEFAULT '[]'::jsonb NOT NULL,
     screen jsonb DEFAULT '{}'::jsonb NOT NULL,
+    answered_at timestamp(6) without time zone,
     CONSTRAINT check_ins_status_known CHECK (((status)::text = ANY (ARRAY[('new'::character varying)::text, ('escalated'::character varying)::text, ('answered'::character varying)::text])))
 );
 
@@ -1022,6 +1066,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: ai_calls id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_calls ALTER COLUMN id SET DEFAULT nextval('public.ai_calls_id_seq'::regclass);
+
+
+--
 -- Name: ai_drafts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1208,6 +1259,14 @@ ALTER TABLE ONLY public.training_units ALTER COLUMN id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: ai_calls ai_calls_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_calls
+    ADD CONSTRAINT ai_calls_pkey PRIMARY KEY (id);
 
 
 --
@@ -1450,10 +1509,31 @@ CREATE UNIQUE INDEX ai_drafts_one_per_input ON public.ai_drafts USING btree (enr
 
 
 --
+-- Name: index_ai_calls_on_clinic_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_calls_on_clinic_id_and_created_at ON public.ai_calls USING btree (clinic_id, created_at);
+
+
+--
+-- Name: index_ai_calls_on_task_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_calls_on_task_and_created_at ON public.ai_calls USING btree (task, created_at);
+
+
+--
 -- Name: index_ai_drafts_on_enrolment_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_ai_drafts_on_enrolment_id ON public.ai_drafts USING btree (enrolment_id);
+
+
+--
+-- Name: index_ai_drafts_on_kind_and_prompt_version_and_model; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_drafts_on_kind_and_prompt_version_and_model ON public.ai_drafts USING btree (kind, prompt_version, model);
 
 
 --
@@ -1538,6 +1618,13 @@ CREATE INDEX index_care_assignments_on_therapist_id ON public.care_assignments U
 --
 
 CREATE INDEX index_check_ins_on_enrolment_id ON public.check_ins USING btree (enrolment_id);
+
+
+--
+-- Name: index_check_ins_on_submitted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_check_ins_on_submitted_at ON public.check_ins USING btree (submitted_at);
 
 
 --
@@ -1912,6 +1999,14 @@ CREATE TRIGGER audit_events_no_update BEFORE DELETE OR UPDATE ON public.audit_ev
 
 
 --
+-- Name: ai_calls fk_rails_05367f75fa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_calls
+    ADD CONSTRAINT fk_rails_05367f75fa FOREIGN KEY (clinic_id) REFERENCES public.clinics(id);
+
+
+--
 -- Name: ai_drafts fk_rails_1a775e1546; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2150,6 +2245,7 @@ ALTER TABLE ONLY public.patients
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261121000001'),
 ('20261025000004'),
 ('20261025000003'),
 ('20261025000002'),

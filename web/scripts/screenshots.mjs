@@ -1,5 +1,6 @@
 // Screenshots of the console against a running app with demo data (bin/rails db:seed).
-// BASE_URL defaults to the Rails server on :3000 serving the built console.
+// BASE_URL defaults to the Rails server on :3000 serving the built console. SHOTS=operations
+// takes only the operations view (CI does this against the booted image, with a jobs worker).
 import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
 
@@ -24,6 +25,23 @@ async function shot(page, name, opts = {}) {
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${OUT}${name}.png`, fullPage: true, ...opts });
   console.log(`wrote ${name}.png`);
+}
+
+async function operations() {
+  const ada = await as("Ada Nowak");
+  await ada.goto(`${BASE}/operations`);
+  await ada.getByRole("heading", { name: "Prompt and model releases" }).waitFor();
+  await shot(ada, "12-operations");
+  const adaDark = await as("Ada Nowak", { scheme: "dark" });
+  await adaDark.goto(`${BASE}/operations`);
+  await adaDark.getByRole("heading", { name: "Prompt and model releases" }).waitFor();
+  await shot(adaDark, "13-operations-dark");
+}
+
+if (process.env.SHOTS === "operations") {
+  await operations();
+  await browser.close();
+  process.exit(0);
 }
 
 const signIn = await browser.newPage({ viewport: { width: 1360, height: 900 } });
@@ -66,4 +84,5 @@ await dark.getByRole("link", { name: /Anna Becker/ }).click();
 await dark.getByRole("heading", { name: "Anna Becker" }).waitFor();
 await shot(dark, "11-patient-dark");
 
+await operations();
 await browser.close();

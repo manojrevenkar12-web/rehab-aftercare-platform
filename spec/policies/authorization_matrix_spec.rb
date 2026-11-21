@@ -29,7 +29,8 @@ RSpec.describe "Authorization matrix" do
     "claim.index" => ->(s, u) { ClaimPolicy.new(u, Claim).index? },
     "claim.show" => ->(s, u) { ClaimPolicy.new(u, Claim.new(enrolment: s[:enrolment])).show? },
     "claim.submit" => ->(s, u) { ClaimPolicy.new(u, Claim.new(enrolment: s[:enrolment])).submit? },
-    "audit.index" => ->(s, u) { AuditEventPolicy.new(u, AuditEvent).index? }
+    "audit.index" => ->(s, u) { AuditEventPolicy.new(u, AuditEvent).index? },
+    "ops.show" => ->(_s, u) { OpsPolicy.new(u, :ops).show? }
   }.freeze
 
   it "has a check for every action in the matrix, and the reverse" do

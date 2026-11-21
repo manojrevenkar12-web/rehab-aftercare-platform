@@ -9,6 +9,12 @@ class GenerateDraftJob < ApplicationJob
     draft = AiDraft.find(draft_id)
     return unless draft.status == "queued"
 
+    Ai::CallContext.set(clinic_id: draft.enrolment.patient.clinic_id) { generate(draft, client) }
+  end
+
+  private
+
+  def generate(draft, client)
     e = draft.enrolment
     pseudonymizer = Ai::Pseudonymizer.new(e.patient.identity)
     result = case draft.kind
@@ -25,8 +31,8 @@ class GenerateDraftJob < ApplicationJob
                   model: result.model, prompt_version: result.prompt_version)
     AuditEvent.record!(action: "ai_draft.generated", subject: draft,
                        data: { status: draft.status, model: result.model, findings: result.findings.map { |f| f.code.to_s } })
-  rescue Ai::Client::LeakRefused => e
-    draft.update!(status: "failed", error: e.message)
+  rescue Ai::Client::LeakRefused => err
+    draft.update!(status: "failed", error: err.message)
     AuditEvent.record!(action: "ai_draft.leak_refused", subject: draft, data: { kind: draft.kind })
   end
 end

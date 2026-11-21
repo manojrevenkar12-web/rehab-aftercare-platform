@@ -50,6 +50,7 @@ module DemoData
     finish_one!(clinic, staff)
     end_one_early!(clinic, staff)
     draft_examples!(clinic, staff)
+    History.load!(clinic, staff, today: today)
     staff
   end
 

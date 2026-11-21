@@ -1,0 +1,14 @@
+# Price per million tokens, in euro cents, by model name prefix (the longest matching prefix
+# wins). These are PLACEHOLDER rates for the simulated models, so the operations view has
+# something to add up; set the real rates of the contracted EU-hosted model before relying on a
+# cost figure. A model with no matching prefix is priced at `default` and flagged in the view.
+models:
+  simulated-1-mini:
+    input_cents_per_million: 15
+    output_cents_per_million: 60
+  simulated-1:
+    input_cents_per_million: 50
+    output_cents_per_million: 150
+default:
+  input_cents_per_million: 100
+  output_cents_per_million: 300

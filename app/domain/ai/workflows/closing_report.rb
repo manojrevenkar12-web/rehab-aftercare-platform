@@ -16,7 +16,7 @@ module Ai
       PROMPT
 
       def call(facts, guard: nil)
-        reply = @client.chat(task: "closing_report", messages: messages(SYSTEM, facts), guard: guard)
+        reply = @client.chat(task: "closing_report", messages: messages(SYSTEM, facts), guard: guard, prompt_version: PROMPT_VERSION)
         out = reply.content
         findings = schema_findings(out, %w[course outcome adherence recommendation])
         if findings.empty?

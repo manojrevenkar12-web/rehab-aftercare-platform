@@ -8,6 +8,7 @@ import { SessionProvider } from "../features/auth/session";
 import { SignInPage } from "../features/auth/SignInPage";
 import { CaseloadPage } from "../features/caseload/CaseloadPage";
 import { ClaimsPage } from "../features/claims/ClaimsPage";
+import { OperationsPage } from "../features/operations/OperationsPage";
 import { PatientPage } from "../features/patient/PatientPage";
 import { ApiError } from "../shared/api/client";
 import { Shell } from "./Shell";
@@ -57,6 +58,14 @@ export function AppRoutes() {
           element={
             <RequireSession roles={["clinic_admin"]}>
               <AuditPage />
+            </RequireSession>
+          }
+        />
+        <Route
+          path="operations"
+          element={
+            <RequireSession roles={["clinic_admin"]}>
+              <OperationsPage />
             </RequireSession>
           }
         />

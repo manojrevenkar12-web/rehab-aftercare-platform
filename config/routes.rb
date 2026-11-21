@@ -37,10 +37,11 @@ Rails.application.routes.draw do
         end
       end
       resources :audit_events, only: :index
+      get "ops", to: "ops#show"
     end
   end
 
-  # everything else is the console's own routing (sign-in, caseload, patients, billing, audit)
+  # everything else is the console's own routing (sign-in, caseload, patients, billing, audit, operations)
   root "console#show"
   get "*path", to: "console#show", constraints: ->(req) { !req.path.start_with?("/api", "/up", "/assets") && req.format.html? }
 end

@@ -65,7 +65,8 @@ module Ai
           { id: c["id"], name: c.dig("function", "name"), arguments: JSON.parse(c.dig("function", "arguments").presence || "{}") }
         end
         content = msg["content"].present? ? JSON.parse(msg["content"]) : nil
-        Client::Reply.new(content: content, tool_calls: calls, model: doc["model"] || @model)
+        usage = doc["usage"] && { input_tokens: doc.dig("usage", "prompt_tokens").to_i, output_tokens: doc.dig("usage", "completion_tokens").to_i }
+        Client::Reply.new(content: content, tool_calls: calls, model: doc["model"] || @model, usage: usage)
       rescue JSON::ParserError => e
         raise Error, "the model did not return JSON: #{e.message[0, 120]}"
       end

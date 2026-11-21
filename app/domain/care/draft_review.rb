@@ -18,9 +18,9 @@ module Care
         final = edits.present? ? @draft.output.merge(edits.stringify_keys) : @draft.output
         recheck!(final) if edits.present?
         apply!(final)
-        @draft.update!(status: "approved", reviewed_by: @actor, reviewed_at: Time.current, output: final)
+        @draft.update!(status: "approved", reviewed_by: @actor, reviewed_at: Time.current, output: final, edited: edited?(edits))
         AuditEvent.record!(actor: @actor, action: "ai_draft.approved", subject: @draft,
-                           data: { kind: @draft.kind, edited: edits.present?, fields_edited: edits&.keys })
+                           data: { kind: @draft.kind, edited: edited?(edits), fields_edited: edits&.keys })
       end
       @draft
     end
@@ -31,13 +31,20 @@ module Care
       @draft.with_lock do
         raise Refused, "draft is #{@draft.status}" unless %w[ready held failed].include?(@draft.status)
 
-        @draft.update!(status: "rejected", reviewed_by: @actor, reviewed_at: Time.current)
+        @draft.update!(status: "rejected", reviewed_by: @actor, reviewed_at: Time.current, edited: false)
       end
       AuditEvent.record!(actor: @actor, action: "ai_draft.rejected", subject: @draft, data: { kind: @draft.kind, reason: reason })
       @draft
     end
 
     private
+
+    # An edit that changes nothing is not an edit: the release gate counts real changes only.
+    def edited?(edits)
+      return false if edits.blank?
+
+      edits.stringify_keys.any? { |k, v| @draft.output[k] != v }
+    end
 
     # Edited text goes through the same checks as the model's, minus the ones only a model fails.
     def recheck!(final)
@@ -56,7 +63,7 @@ module Care
       case @draft.kind
       when "check_in_reply"
         check_in = e.check_ins.find(final.fetch("check_in_id"))
-        check_in.update!(status: "answered")
+        check_in.update!(status: "answered", answered_at: Time.current)
       when "closing_report"
         report = e.closing_report || e.build_closing_report
         raise Refused, "the closing report is already signed" if report.signed?

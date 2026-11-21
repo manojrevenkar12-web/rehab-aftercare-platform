@@ -91,6 +91,38 @@ jobs:
           curl -fs -X POST localhost:3000/api/v1/session -H "Content-Type: application/json" \
             -d '{"email":"theo@demo.example","password":"demo-password-1"}' | grep -q token
           docker logs app | tail -20
+      - name: run the jobs worker, then read the operations view and the release gate
+        run: |
+          docker run -d --name worker --network t \
+            -e DATABASE_URL=postgres://postgres:postgres@db:5432/rehab_aftercare \
+            -e SECRET_KEY_BASE=ci-only-0123456789abcdef0123456789abcdef0123456789abcdef0123456789 \
+            rehab-aftercare:ci bin/jobs
+          sleep 20
+          TOKEN=$(curl -fs -X POST localhost:3000/api/v1/session -H "Content-Type: application/json" \
+            -d '{"email":"ada@demo.example","password":"demo-password-1"}' | jq -r .token)
+          curl -fs localhost:3000/api/v1/ops -H "Authorization: Bearer $TOKEN" > ops.json
+          jq '{alerts, check_ins: (.check_ins | del(.by_day)), releases: [.releases[] | {kind, decision, reasons}], models: [.models.tasks[] | {task, calls, latency_ms, cost_eur}], queue}' ops.json
+          jq -e '[.releases[] | .decision] == ["pass", "wait", "block"]' ops.json
+          if grep -q -e "Karl" -e "Weber" -e "Knie" ops.json; then echo "patient text in the ops view"; exit 1; fi
+          docker exec app bin/rails ops:report > ops-report.md && cat ops-report.md
+          set +e; docker exec app bin/rails ai:release_gate; code=$?; set -e
+          echo "release gate exit code: $code (1 = a release is blocked, as the demo history intends)"
+          test "$code" = "1"
+      - name: screenshot the operations view
+        working-directory: web
+        run: |
+          npm ci
+          npm install --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+          SHOTS=operations node scripts/screenshots.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: operations-screenshots
+          path: |
+            docs/screenshots/12-operations.png
+            docs/screenshots/13-operations-dark.png
+            ops.json
+            ops-report.md
       - name: show the app's log when it did not boot
         if: failure()
         run: docker logs app 2>&1 | tail -40 | sed 's/^/::warning::/'

@@ -39,7 +39,8 @@ Every step is **authorised** per role and written to a **tamper-evident audit tr
 | Billing | Claims are idempotent. Missing documents and units are listed as problems. An early end goes to a person to decide (`needs_review`) rather than being priced by a guess. The lifecycle runs submitted → paid / rejected. | `app/domain/billing/` |
 | Audit | Append-only (a database trigger refuses UPDATE and DELETE) and hash-chained. `verify_chain` names the first broken event. | `app/models/audit_event.rb` |
 | Evaluation | Dev and held-out sets for red flags and pseudonymisation. Injected-mistake runs show the draft checks hold every mistake. Adversarial runs test the model screen's guarantees. A gate is configured in `config/evals.yml`. | `evals/`, `lib/evals/`, `reports/evals/` |
-| Therapist console | React, TypeScript and Framer Motion, organised feature-first. Covers caseload, the programme ruler, check-ins with evidence, draft review, the plan, closing report, billing and the audit trail. | `web/` |
+| Operations and release gate | Every model call is logged as numbers only (latency, tokens, cost, outcome, prompt version; never text). The operations view shows the 24-hour reply promise, draft reviews, model cost and latency per workflow, and job-queue health, with alerts. A gate compares each new prompt or model with the one before it on what reviewers did, and blocks one that makes drafts worse. | `app/domain/ops/`, `app/domain/ai/call_log.rb`, `config/ops.yml`, `web/src/features/operations/` |
+| Therapist console | React, TypeScript and Framer Motion, organised feature-first. Covers caseload, the programme ruler, check-ins with evidence, draft review, the plan, closing report, billing, operations and the audit trail. | `web/` |
 
 ## Results, measured honestly
 
@@ -73,6 +74,28 @@ What this shows:
   "evals:screen[set2]"`. The first such run on set2 is recorded once, like any held-out run.
 - Draft checks, using the simulated model with injected mistakes, held 34 of 34. They held none
   of the 9 faithful drafts.
+
+## Operations view and the release gate
+
+![Operations view](docs/screenshots/12-operations.png)
+
+*Taken in CI from the booted image with a jobs worker running. The release history behind it is
+invented (`lib/demo_data/history.rb`) to exercise all three decisions; it shows the mechanics,
+not how any model performs.*
+
+A **release** is a prompt version plus a model. Each draft kind's newest release is compared
+with the one before it on what reviewers did with the drafts, pooled over all clinics: the share
+rejected, and the share rejected or edited. With Newcombe intervals on the difference, the gate
+**waits** for 40 reviews on each side, **blocks** a release that is worse with 95% confidence,
+and **passes** one that is at most 5 points worse with 95% confidence (`config/ops.yml`). The
+generated report is `reports/ops/demo.md`; its release table:
+
+<!-- ops-table -->
+
+`bin/rails ai:release_gate` prints the same decisions and exits 1 when a release is blocked, so
+a deploy pipeline can stop it before it reaches more clinics. This is the gate after release;
+`bin/rails evals:gate` is still the one before a merge. Why it works this way, and what it cannot
+see, is in [ADR 0006](docs/adr/0006-operations-view-and-release-gate.md).
 
 ## Run it
 
@@ -132,6 +155,7 @@ Decisions are in `docs/adr/`:
 - [0003](docs/adr/0003-pseudonymise-before-any-model.md): pseudonymise before any model.
 - [0004](docs/adr/0004-rules-then-model-screen.md): rules, then an add-only model screen, then an SLA.
 - [0005](docs/adr/0005-billing-unknowns-go-to-a-person.md): billing unknowns go to a person.
+- [0006](docs/adr/0006-operations-view-and-release-gate.md): a numbers-only call ledger, and a release gate on reviewers' decisions.
 
 ## The console
 
@@ -156,6 +180,9 @@ Decisions are in `docs/adr/`:
 - **The German rules are a starting point.** They were checked against two blind sets written by
   one writer. A real deployment needs messages from real patients, under a data-protection
   agreement, before the thresholds mean anything.
+- **Operations numbers in the demo are invented history.** Cost rates in `config/ai/costs.yml`
+  are placeholders, and simulated-model tokens are estimated. The release gate needs real
+  reviews to mean anything, and it only sees what reviewers notice.
 - All people, clinics, numbers and addresses in this repository are invented. E-mail domains
   end in `.example`.
 

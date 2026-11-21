@@ -34,7 +34,7 @@ module Ai
       end
 
       def call(facts, guard: nil)
-        reply = @client.chat(task: "check_in_screen", messages: messages(system_prompt, facts), guard: guard)
+        reply = @client.chat(task: "check_in_screen", messages: messages(system_prompt, facts), guard: guard, prompt_version: PROMPT_VERSION)
         judge(reply.content, facts, model: reply.model)
       rescue Client::LeakRefused
         raise

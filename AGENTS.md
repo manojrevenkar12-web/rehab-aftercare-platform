@@ -7,6 +7,8 @@
 - `bin/rails evals:run && bin/rails evals:gate`: the dev evaluation and its thresholds
   (`config/evals.yml`).
 - `cd web && npm run typecheck && npm run lint && npm test`
+- `bin/rails ai:release_gate` (exit 1 = a release is blocked) and `bin/rails ops:report`
+  (Markdown for `reports/ops/`).
 
 ## Invariants
 
@@ -24,6 +26,11 @@ Each one has a spec or a CI step.
 - **Authorisation is the matrix.** Change `spec/policies/authorization_matrix.yml` together with
   a policy, never the policy alone.
 - **The audit trail is append-only and hash-chained** (a database trigger; `spec/models/audit_event_spec.rb`).
+- **The call ledger holds numbers, never text.** `ai_calls` has no column for messages or
+  replies, and the operations view shows counts only (`spec/requests/ops_spec.rb`,
+  `spec/domain/ai_call_log_spec.rb`; CI greps the booted demo's `/api/v1/ops` for patient words).
+- **A release that reviewers reject more is blocked.** `Ops::ReleaseGate` decides from pooled
+  reviews; change its rule together with `spec/domain/release_gate_spec.rb` and ADR 0006.
 - **Thresholds, DRV rules, rates, patterns and SLAs live in `config/`, not in code.**
 
 ## Held-out sets

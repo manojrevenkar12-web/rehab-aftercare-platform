@@ -28,7 +28,7 @@ module Ai
         trace = []
         reply = nil
         MAX_TURNS.times do
-          reply = @client.chat(task: "plan_change", messages: msgs, tools: TOOLS, guard: guard)
+          reply = @client.chat(task: "plan_change", messages: msgs, tools: TOOLS, guard: guard, prompt_version: PROMPT_VERSION)
           break if reply.tool_calls.empty?
 
           msgs << { role: "assistant", content: nil, tool_calls: reply.tool_calls.map { |c| tool_call_message(c) } }

@@ -23,7 +23,7 @@ module Ai
       }.freeze
 
       def call(facts, guard: nil, mapping: {})
-        reply = @client.chat(task: "check_in_reply", messages: messages(SYSTEM, facts), guard: guard)
+        reply = @client.chat(task: "check_in_reply", messages: messages(SYSTEM, facts), guard: guard, prompt_version: PROMPT_VERSION)
         out = reply.content
         findings = schema_findings(out, %w[summary reply])
         if findings.empty?
