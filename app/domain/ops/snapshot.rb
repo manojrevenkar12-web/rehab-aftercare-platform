@@ -107,7 +107,7 @@ module Ops
           { task: task, prompt_version: versions[task], calls: calls, errors: errors, refused: refused,
             error_share: Stats.share(errors, calls), latency_ms: { p50: p50, p95: p95 },
             input_tokens: input, output_tokens: output, tokens_estimated: estimated, cost_eur: euros(cost),
-            cost_per_call_eur: calls.zero? ? nil : euros(cost.fdiv(calls)) }
+            cost_per_call_eur: calls.zero? ? nil : euros(cost.to_f / calls) }
         end,
         cost_eur: euros(scope.sum(:cost_microeuros)),
         cost_by_day: (@from.to_date..@now.to_date).map { |d| { date: d.iso8601, cost_eur: euros(daily.fetch(d, 0)) } },
@@ -141,7 +141,8 @@ module Ops
       @gate.all.map(&:to_h)
     end
 
-    def euros(microeuros) = (microeuros / 1_000_000.0).round(4)
+    # sum(bigint) comes back as a BigDecimal, which JSON would write as a string
+    def euros(microeuros) = (microeuros.to_f / 1_000_000).round(4)
     def round(x) = x&.round(1)
 
     # Turns the numbers into what needs a person, worst first.
