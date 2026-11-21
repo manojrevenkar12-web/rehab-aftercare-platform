@@ -90,7 +90,11 @@ rejected, and the share rejected or edited. With Newcombe intervals on the diffe
 and **passes** one that is at most 5 points worse with 95% confidence (`config/ops.yml`). The
 generated report is `reports/ops/demo.md`; its release table:
 
-<!-- ops-table -->
+| Workflow | Baseline → candidate | Reviews | Rejected | Rejected or edited | 95% interval of the change | Decision |
+|---|---|---:|---:|---:|---|---|
+| check_in_reply | check-in-reply/2 · simulated-1 → check-in-reply/3 · simulated-1 | 180 / 170 | 6.1% → 3.5% | 36.1% → 21.2% | -7.5 to +2.2 pts; -24.0 to -5.5 pts | **pass** |
+| closing_report | closing-report/1 · simulated-1 → closing-report/2 · simulated-1 | 70 / 24 | 7.1% → 4.2% | 47.1% → 33.3% | -12.2 to +13.6 pts; -33.0 to +9.1 pts | **wait** |
+| plan_change | plan-change/2 · simulated-1 → plan-change/2 · simulated-1-mini | 90 / 60 | 7.8% → 25.0% | 27.8% → 55.0% | +5.4 to +30.1 pts; +11.2 to +41.7 pts | **block** |
 
 `bin/rails ai:release_gate` prints the same decisions and exits 1 when a release is blocked, so
 a deploy pipeline can stop it before it reaches more clinics. This is the gate after release;
